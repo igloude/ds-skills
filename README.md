@@ -23,7 +23,7 @@ ds-plans/     →  self-contained specs         → cheap executors, or --issues
 
 ```
 /plugin marketplace add igloude/ds-skills
-/plugin install ds-skills
+/plugin install ds-skills@igloude
 ```
 
 Works in any agent that supports the Agent Skills format. Reviews, plans, and the manifest are plain markdown — any agent or human can pick them up.
