@@ -1,0 +1,12 @@
+{
+  "name": "ds-skills",
+  "version": "1.0.0",
+  "description": "AI Skills for Design System maintenance",
+  "license": "MIT",
+  "author": "Ian Gloude",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
