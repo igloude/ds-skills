@@ -1,0 +1,15 @@
+{
+  "name": "ds-skills",
+  "owner": {
+    "name": "Ian Gloude"
+  },
+  "metadata": {
+    "description": "Claude marketplace catalog for the ds-skills plugin."
+  },
+  "plugins": [
+    {
+      "name": "ds-skills",
+      "source": "./"
+    }
+  ]
+}

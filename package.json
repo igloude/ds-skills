@@ -1,12 +1,7 @@
 {
   "name": "ds-skills",
-  "version": "1.0.0",
-  "description": "AI Skills for Design System maintenance",
+  "version": "0.1.0",
+  "description": "Agent skills that police AI-generated work for design-system conformance and audit the design system itself. Report-only: reviews, plans, issues — never edits code.",
   "license": "MIT",
-  "author": "Ian Gloude",
-  "type": "commonjs",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+  "author": "Ian Gloude"
 }
