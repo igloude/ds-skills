@@ -8,7 +8,7 @@ Three properties make a review actionable:
 2. **Remediation specs, not descriptions** — every blocking finding carries current-state excerpt, exact change, and a verification command with expected output. The fixer never judges whether it succeeded.
 3. **Scope honesty** — what was audited, what wasn't, and what the toolchain already covers. A review that overclaims its coverage gets one bad merge before nobody trusts it.
 
-File naming: `ds-reviews/NNN-<branch-or-pr-slug>.md`, numbered monotonically across all reviews.
+File naming: `plans/NNN-review-<branch-or-pr-slug>.md`. Reviews and plans share `plans/` and one monotonic numbering sequence; the `-review-` slug is what tells them apart.
 
 ---
 
@@ -43,7 +43,7 @@ File naming: `ds-reviews/NNN-<branch-or-pr-slug>.md`, numbered monotonically acr
 - STOP if: <the one assumption that, if false, means don't improvise — report instead>
 
 (Repeat per blocking finding. If a remediation is too large for an inline spec —
-e.g. replacing a hand-rolled Dialog — write it as `ds-plans/NNN-*.md` and link it here.)
+e.g. replacing a hand-rolled Dialog — write it as a plan (`plans/NNN-*.md`) and link it here.)
 
 ## Should fix (introduced)
 
@@ -68,14 +68,14 @@ recorded so sweeps can pick them up. Title, class, location, severity-if-introdu
 
 Classes seen this review: `token.literal.exact` (x4), `usage.deprecated-prop` (x1).
 <If any class has now appeared in 3+ reviews per the index: "`class` has recurred
-across N reviews — graduating to a lint-rule plan; see ds-plans/ or next sweep.">
+across N reviews — graduating to a lint-rule plan; see plans/ or next sweep.">
 ```
 
 ---
 
 ## Batch addendum
 
-`batch` mode produces one review per ref using the template above, plus `ds-reviews/NNN-batch-<slug>.md`:
+`batch` mode produces one review per ref using the template above, plus `plans/NNN-review-batch-<slug>.md`:
 
 ```markdown
 # Batch Review NNN: <n> branches
@@ -103,12 +103,12 @@ Identical violations across refs (same class, same cause — usually the same
 prompt): fix once, apply everywhere. Class, refs affected, single remediation spec.
 ```
 
-## Index: `ds-reviews/README.md`
+## Index: `plans/README.md`
 
-Written on the first review, appended every run. This log is what makes recurrence detection and reconcile possible:
+One index for the whole `plans/` directory, shared with plan files (the plan template owns the Plans section). Written on the first review, appended every run — this log is what makes recurrence detection and reconcile possible:
 
 ```markdown
-# DS Conformance Reviews
+## Reviews
 
 | NNN | Ref | Date | Verdict | Blocking | Classes seen |
 |-----|-----|------|---------|----------|--------------|
@@ -116,7 +116,7 @@ Written on the first review, appended every run. This log is what makes recurren
 ## Findings considered and rejected
 
 - <finding>: <one line why — by-design, toolchain-covered, waived-by, replacement-gap>.
-  (So the next run doesn't re-litigate it.)
+  (So the next run doesn't re-litigate it. Shared with plans — one list.)
 ```
 
 ## Quality bar — check before finishing each review

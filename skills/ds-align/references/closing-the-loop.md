@@ -6,7 +6,7 @@ The reviewer's job doesn't end at the verdict. This file covers backlog upkeep (
 
 ## `reconcile` — keep the record honest
 
-Process what happened since the last session. Read `ds-reviews/README.md`, `ds-plans/README.md`, and the manifest's waiver ledger, then:
+Process what happened since the last session. Read `plans/README.md` (the shared reviews + plans index) and the manifest's waiver ledger, then:
 
 **Reviews**
 - For each review whose ref has merged: spot-check that blocking findings were actually resolved on the default branch (cheap checks only — grep for the old pattern, re-run the token script over the files). Mark the review `resolved` or `merged-with-findings` in the index. Don't delete review files — they're the record.

@@ -15,7 +15,7 @@ The economics: generation is cheap now, so the volume of work to police is large
 
 ## Hard Rules
 
-1. **Never modify source code yourself.** No fixes, no "quick wins." The only writes go under `ds-reviews/` and `ds-plans/` in the repo root. (Namespaced so this skill coexists with other advisor skills that claim `plans/`.)
+1. **Never modify source code yourself.** No fixes, no "quick wins." The only writes go under `plans/` in the repo root — reviews and plans share the directory, one numbering sequence, and one index; review files carry a `-review-` slug so the two read apart at a glance.
 2. **Never run commands that mutate the working tree** — no installs, no formatters, no commits. Read, search, and read-only analysis only (typecheck, lint in check mode, tests if cheap and side-effect free). One scoped exception: `gh issue create` under an explicit `--issues` flag.
 3. **Every review and plan must be fully self-contained.** The reader — a generating agent re-prompted with your review, or an executor picking up a plan — has not seen this session. A finding that says "as discussed" is broken.
 4. **Never reproduce secret values.** Reference `file:line` and credential type only; recommend rotation.
@@ -55,8 +55,8 @@ Subagents and greps over-report. Before anything reaches a verdict or table, ope
 
 The modes diverge here:
 
-- **Gate / batch** → write `ds-reviews/NNN-<slug>.md` per [references/review-template.md](references/review-template.md) — read it before the first review. Render the verdict from introduced findings only: any blocking → **NEEDS CHANGES**; should-fix or advisory only → **PASS WITH FINDINGS**; none or waived-only → **PASS**. Every blocking finding carries an inline remediation spec. No selection step — a gate that asks which violations to spec is not a gate.
-- **Sweep** → present the vetted findings table ordered by leverage, with extraction candidates presented separately after it (they are options for the DS owner, not problems ranked against violations). Ask which findings become plans; do not write thirty plans nobody asked for. Selected findings become `ds-plans/NNN-<slug>.md` per [references/plan-template.md](references/plan-template.md), stamped with the current commit, excerpts from your own reads only, plus the index.
+- **Gate / batch** → write `plans/NNN-review-<slug>.md` per [references/review-template.md](references/review-template.md) — read it before the first review. Render the verdict from introduced findings only: any blocking → **NEEDS CHANGES**; should-fix or advisory only → **PASS WITH FINDINGS**; none or waived-only → **PASS**. Every blocking finding carries an inline remediation spec. No selection step — a gate that asks which violations to spec is not a gate.
+- **Sweep** → present the vetted findings table ordered by leverage, with extraction candidates presented separately after it (they are options for the DS owner, not problems ranked against violations). Ask which findings become plans; do not write thirty plans nobody asked for. Selected findings become `plans/NNN-<slug>.md` per [references/plan-template.md](references/plan-template.md), stamped with the current commit, excerpts from your own reads only, plus the index.
 
 ## Invocation variants
 

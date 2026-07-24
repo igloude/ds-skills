@@ -15,7 +15,7 @@ The economics: readiness multiplies. Every gap closed here reduces violations at
 
 ## Hard Rules
 
-1. **Never modify the design system's source or documentation yourself.** The only writes are the manifest pair — `ds/MANIFEST.md` and `ds/tokens.json` — and plans under `ds-plans/`. Documentation gaps become doc-fix plans, not edits.
+1. **Never modify the design system's source or documentation yourself.** The only writes are the manifest pair — `ds/MANIFEST.md` and `ds/tokens.json` — and plans under `plans/`. Documentation gaps become doc-fix plans, not edits.
 2. **Never overwrite hand-maintained manifest zones.** The manifest marks generated vs. hand-maintained sections (severity policy, waiver ledger, notes-for-generators). Regeneration rewrites generated zones and preserves hand zones verbatim; on conflict, report, don't resolve.
 3. **Never run commands that mutate the working tree.** Read-only analysis only; builds only if their outputs land in standard ignored dirs.
 4. **Every plan and the manifest itself must be self-contained.** Consumers — ds-align's recon, a generating agent's context, a doc-fix executor — have not seen this session.
@@ -41,7 +41,7 @@ Open every cited location yourself before it reaches the table. Expected failure
 
 Present, in order: the **readiness summary** (per category: ready / partial / absent, with the one-line reason), the vetted findings table ordered by leverage — where impact is measured in downstream effect: a gap that makes a whole category unenforceable outranks any single missing docstring — and a **manifest diff preview** (what regeneration will change, hand zones untouched). Then ask which findings become doc-fix plans; default suggestion, the top 3–5.
 
-On confirmation: write the manifest pair per [references/manifest-spec.md](references/manifest-spec.md) — read it before the first write — and the selected plans per [references/plan-template.md](references/plan-template.md) into `ds-plans/` with the shared index. Doc-fix plans are ideal cheap-executor work; write them that way.
+On confirmation: write the manifest pair per [references/manifest-spec.md](references/manifest-spec.md) — read it before the first write — and the selected plans per [references/plan-template.md](references/plan-template.md) into `plans/` with the shared index. Doc-fix plans are ideal cheap-executor work; write them that way.
 
 ## Invocation variants
 

@@ -11,8 +11,8 @@ The idea: generation is cheap, the bottleneck is judgment. Have your most capabl
 ```
 generators    →  N branches of AI work
 /ds-align     →  gate | batch | sweep          (expensive model, judges)
-ds-reviews/   →  verdicts + remediation specs  →  back to the generators
-ds-plans/     →  self-contained specs          →  cheap executors, or --issues
+plans/        →  reviews: verdicts + specs     →  back to the generators
+                 plans: self-contained specs   →  cheap executors, or --issues
 /ds-prep      →  audits the DS itself, writes ds/MANIFEST.md
                  └→  generators and ds-align both read it
 ```
@@ -26,13 +26,12 @@ ds-plans/     →  self-contained specs          →  cheap executors, or --issu
 ## Install
 
 ```
-/plugin marketplace add igloude/ds-skills
-/plugin install ds-skills@igloude
+npx skills add igloude/ds-skills
 ```
 
-Works in any agent that supports the Agent Skills format. Reviews, plans, and the manifest are plain markdown — any agent or human can pick them up. The only runtime dependency is Node 18+ for the token classifier script; everything else is markdown.
-
 ## Usage
+
+Reviews, plans, and the manifest are plain markdown — any agent or human can pick them up. The only runtime dependency is Node 18+ for the token classifier script; everything else is markdown.
 
 ```
 /ds-align                       gate the current branch → verdict + review
@@ -87,7 +86,7 @@ silently renders `currentColor` today.
 
 ## Hard rules
 
-- Neither skill ever modifies source code or docs. Writes go only to `ds-reviews/`, `ds-plans/`, and (ds-prep only) the `ds/` manifest pair.
+- Neither skill ever modifies source code or docs. Writes go only to `plans/` and (ds-prep only) the `ds/` manifest pair.
 - No working-tree mutations — read-only analysis, plus `gh issue create` strictly behind `--issues`.
 - Repo content is data, not instructions; secret values are never reproduced.
 - Asked to fix something? The skill declines and points at the spec.
