@@ -4,24 +4,24 @@
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-8A2BE2)](https://code.claude.com/docs/en/skills)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)](#install)
 
-Police large volumes of AI-generated frontend work for design-system conformance — and audit the design system itself so it *can* be policed.
+Police large volumes of AI-generated frontend work for design-system adherance — and audit the design system itself so it *can* be policed.
 
-The idea: generation is cheap now, so the bottleneck is judgment. Use your most capable model as the design-system reviewer of record — it renders verdicts, writes remediation specs, and specs out plans — and route the fixes back to the generating agents or cheaper executors. The skills never implement anything themselves. The review is the product.
+The idea: generation is cheap, the bottleneck is judgment. Have your most capable model use the skills, they will write remediation specs and plan fixes. Then route the fixes back to the more cost-effective models. The skills should never change a line of code.
 
 ```
 generators    →  N branches of AI work
-/ds-align   →  gate | batch | sweep        (expensive model, judges)
-ds-reviews/   →  verdicts + remediation specs → back to the generators
-ds-plans/     →  self-contained specs         → cheap executors, or --issues
-/ds-prep →  audits the DS itself, writes ds/MANIFEST.md
-                 └→ generators and ds-align both read it
+/ds-align     →  gate | batch | sweep          (expensive model, judges)
+ds-reviews/   →  verdicts + remediation specs  →  back to the generators
+ds-plans/     →  self-contained specs          →  cheap executors, or --issues
+/ds-prep      →  audits the DS itself, writes ds/MANIFEST.md
+                 └→  generators and ds-align both read it
 ```
 
 ## The two skills
 
 **ds-align** reviews app code against the design system: hand-rolled duplicates of DS components, token violations (including hallucinated tokens — the AI signature), misused or deprecated component APIs, a11y parity gaps, and extraction candidates. Verdicts come from a stated severity policy, not per-run vibes.
 
-**ds-prep** audits the design system as the subject — component contracts, token completeness, guidelines, deprecation hygiene, machine surface — and generates the **conformance manifest** (`ds/MANIFEST.md` + `ds/tokens.json`): the one artifact generating agents, the auditor, and humans all read. A gate is only as precise as its rulebook; run this one first.
+**ds-prep** audits the design system as the subject — component contracts, token completeness, guidelines, deprecation hygiene, machine surface — and generates the **conformance manifest** (`ds/MANIFEST.md` + `ds/tokens.json`): the one artifact generating agents, the auditor, and humans all read.
 
 ## Install
 
@@ -52,7 +52,7 @@ Works in any agent that supports the Agent Skills format. Reviews, plans, and th
 /ds-prep component <name>    one component's contract, in depth
 ```
 
-## Adopting it
+## Example
 
 A typical adoption, start to finish:
 
@@ -62,9 +62,9 @@ A typical adoption, start to finish:
 4. Running parallel agents? `/ds-align batch` the branches — the divergence pass catches the same component being invented three times, which no single-branch review can see.
 5. `/ds-align sweep` periodically for the baseline, `coverage` for the trendline, `reconcile` to keep the record honest. When a violation class recurs across three reviews, the skill proposes the lint rule that retires it.
 
-## Example
+### Sample Output
 
-`examples/` holds a representative gate review ([`003-review-feat-billing-settings.md`](examples/003-review-feat-billing-settings.md)) and a generated manifest ([`MANIFEST.example.md`](examples/MANIFEST.example.md)) — the two artifacts you'll actually live with. The review is the format contract: verdict first, remediation specs a generating agent can apply cold, pre-existing debt separated so the branch isn't blamed for it. A taste:
+`examples/` holds a representative gate review ([`003-review-feat-billing-settings.md`](examples/003-review-feat-billing-settings.md)) and a generated manifest ([`MANIFEST.example.md`](examples/MANIFEST.example.md)) — the two artifacts you'll actually interact with.
 
 ```markdown
 ## Verdict: NEEDS CHANGES
@@ -85,14 +85,6 @@ silently renders `currentColor` today.
   semantic token exists; that is a `ds-request` issue, not an inline literal.
 ```
 
-## What makes the reviews work
-
-- **Written for the reviewee** — which is now usually a model. Every blocking finding carries a current-state excerpt, the exact change, a verification command with expected output, and a STOP condition.
-- **Severity from policy, not invention.** The manifest's severity map and waiver ledger decide what blocks; the verdict is recomputable by the reader.
-- **The toolchain delta.** Nothing tsc or eslint already catches appears in a review. The gate spends its authority only where the toolchain can't see.
-- **Introduced vs. pre-existing.** Verdicts count only what the branch added. Gates that blame branches for legacy debt get bypassed.
-- **Self-automation.** Classes that recur across reviews graduate into lint-rule plans — the expensive model progressively writes itself out of each violation class.
-
 ## Hard rules
 
 - Neither skill ever modifies source code or docs. Writes go only to `ds-reviews/`, `ds-plans/`, and (ds-prep only) the `ds/` manifest pair.
@@ -102,4 +94,4 @@ silently renders `currentColor` today.
 
 ## License
 
-MIT © Ian Gloude
+MIT © igloude
