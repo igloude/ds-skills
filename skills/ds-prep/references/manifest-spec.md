@@ -1,10 +1,10 @@
 # Conformance Manifest Spec
 
-The manifest is the single contract between three parties who never share a session: **generating agents** (read it to produce conforming work), **ds-conform** (reads it as recon cache and rulebook), and **humans** (review policy changes in PRs like any other code). It is two files because its consumers differ: prose and tables for agents and humans, resolved JSON for scripts.
+The manifest is the single contract between three parties who never share a session: **generating agents** (read it to produce conforming work), **ds-align** (reads it as recon cache and rulebook), and **humans** (review policy changes in PRs like any other code). It is two files because its consumers differ: prose and tables for agents and humans, resolved JSON for scripts.
 
-ds-readiness owns this spec and is the only writer of generated zones. Hand-maintained zones belong to the DS owners.
+ds-prep owns this spec and is the only writer of generated zones. Hand-maintained zones belong to the DS owners.
 
-**Publish it with the package.** Add `ds/` to the DS package's `files` array so every consuming repo gets the manifest via `node_modules/<pkg>/ds/` — that is how ds-conform finds it in split-repo setups without any shared configuration.
+**Publish it with the package.** Add `ds/` to the DS package's `files` array so every consuming repo gets the manifest via `node_modules/<pkg>/ds/` — that is how ds-align finds it in split-repo setups without any shared configuration.
 
 ---
 
@@ -16,8 +16,8 @@ Zone markers are load-bearing: regeneration rewrites `generated` zones and must 
 # <package> Conformance Manifest
 
 <!-- generated: header -->
-- **Package**: @scope/ds@4.2.0        ← the staleness stamp ds-conform checks
-- **Generated**: 2026-07-23, commit `abc1234`, by ds-readiness v0.1.0
+- **Package**: @scope/ds@4.2.0        ← the staleness stamp ds-align checks
+- **Generated**: 2026-07-23, commit `abc1234`, by ds-prep v0.1.0
 - **Token source**: src/tokens/*.css → ds/tokens.json (resolved)
 <!-- /generated -->
 
@@ -31,7 +31,7 @@ Zone markers are load-bearing: regeneration rewrites `generated` zones and must 
 | Tag | stable | neutral, accent | Static labels and metadata | Chip*, Badge* |
 | Chip | deprecated → Tag | — | — | — |
 
-*Synonyms are the names app teams and models reach for; ds-conform's adoption
+*Synonyms are the names app teams and models reach for; ds-align's adoption
 category greps them. Deprecated rows always name the replacement.
 <!-- /generated -->
 
@@ -52,7 +52,7 @@ category greps them. Deprecated rows always name the replacement.
 - **Contribution path**: gaps become issues labeled `ds-request`; interim
   hand-rolls require a waiver below.
 
-## Severity map (overrides ds-conform defaults)
+## Severity map (overrides ds-align defaults)
 
 | Class | Severity |
 |---|---|
@@ -98,7 +98,7 @@ Flat, fully resolved — literals only, because its consumer is a script, not a 
 
 ## Consumption contract
 
-What ds-conform is entitled to rely on (and therefore what regeneration must never break):
+What ds-align is entitled to rely on (and therefore what regeneration must never break):
 
 1. **Discovery order**: `--manifest <path>` → `./ds/` → `node_modules/<pkg>/ds/`.
 2. **Staleness**: the header's `Package` stamp vs. the installed version. Mismatch → `manifest.stale` finding + degraded-confidence note; never silent.
@@ -107,6 +107,6 @@ What ds-conform is entitled to rely on (and therefore what regeneration must nev
 
 ## Update discipline
 
-- `/ds-readiness manifest` after every DS release — cheap, mechanical, keeps the stamp current.
+- `/ds-prep manifest` after every DS release — cheap, mechanical, keeps the stamp current.
 - Policy, severity, and waiver changes are hand edits, PR-reviewed like code — that is the point of them living in a markdown file in the repo.
 - If regeneration would collide with a hand zone (e.g. a hand-added inventory row), stop and report the conflict; resolving it is the DS owner's call.

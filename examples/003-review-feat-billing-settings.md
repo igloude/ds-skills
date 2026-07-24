@@ -1,4 +1,4 @@
-> **Sample output.** A representative review produced by `/ds-conform` (gate
+> **Sample output.** A representative review produced by `/ds-align` (gate
 > mode) against a fictional app consuming `@acme/ui`, kept here as an example
 > of the format. Paths and findings are illustrative — run the skill on your
 > own repo instead.

@@ -1,6 +1,6 @@
 # Closing the Loop — reconcile, --issues
 
-The reviewer's job doesn't end at the verdict. This file covers backlog upkeep (`reconcile`) and publishing (`--issues`). The founding rule survives unchanged: **ds-conform never edits source code.**
+The reviewer's job doesn't end at the verdict. This file covers backlog upkeep (`reconcile`) and publishing (`--issues`). The founding rule survives unchanged: **ds-align never edits source code.**
 
 ---
 
@@ -35,7 +35,7 @@ The flag is the user's authorization — never create issues without it.
 1. Preflight: `gh auth status` succeeds and the repo has a GitHub remote; otherwise write files as normal and say why issues were skipped.
 2. Visibility: `gh repo view --json visibility`. If **public**, warn that issues are publicly visible and get explicit confirmation before publishing anything describing internal architecture or a security-adjacent finding.
 3. Show the list of titles about to become issues; confirm once if interactive.
-4. Per plan: `gh issue create --title "<plan title>" --body-file <plan file>`. Per review (gate mode): one issue per **blocking** finding, body = the finding plus its remediation spec, so each is independently assignable. Labels: `ds-conform` plus the class — apply only if labels exist or can be created without erroring; skip labels rather than fail.
+4. Per plan: `gh issue create --title "<plan title>" --body-file <plan file>`. Per review (gate mode): one issue per **blocking** finding, body = the finding plus its remediation spec, so each is independently assignable. Labels: `ds-align` plus the class — apply only if labels exist or can be created without erroring; skip labels rather than fail.
 5. Record each URL in the plan's Status block or the review's finding, and in the index.
 
 The file remains the source of truth; the issue is distribution. Self-containment is what makes the issue body work unedited.

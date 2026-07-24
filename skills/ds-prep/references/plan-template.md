@@ -1,6 +1,6 @@
 # Doc-Fix Plan Template
 
-A deliberately slimmer sibling of ds-conform's plan template, duplicated here rather than shared: skills are self-contained at their boundaries, the same way plans are (a reference this skill can't see in another skill's folder is a broken reference). The three properties are identical — self-contained context, verification gates, hard boundaries with STOP conditions — trimmed to documentation work, which is lower-risk and ideal for the cheapest executors.
+A deliberately slimmer sibling of ds-align's plan template, duplicated here rather than shared: skills are self-contained at their boundaries, the same way plans are (a reference this skill can't see in another skill's folder is a broken reference). The three properties are identical — self-contained context, verification gates, hard boundaries with STOP conditions — trimmed to documentation work, which is lower-risk and ideal for the cheapest executors.
 
 File naming: `ds-plans/NNN-<slug>.md`, sharing the numbering and index with any existing `ds-plans/` content.
 
@@ -78,7 +78,7 @@ the drafted policy text itself so the executor is transcribing, not deciding.
 
 ## Maintenance notes
 
-What future DS changes must touch this doc; whether `/ds-readiness manifest`
+What future DS changes must touch this doc; whether `/ds-prep manifest`
 should be re-run after it lands (usually yes — say so explicitly).
 ```
 

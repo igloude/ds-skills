@@ -20,3 +20,6 @@ Thumbs.db
 
 # Claude Code local state (project settings stay committed)
 .claude/settings.local.json
+# Build artifacts
+*.zip
+_to_delete/

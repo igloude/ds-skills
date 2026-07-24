@@ -1,5 +1,5 @@
 ---
-name: ds-conform
+name: ds-align
 description: Review code — especially AI-generated work — for conformance to a design system. Runs as a gate on the current branch or PR, a batch review across parallel agent branches, or a full-repo sweep. Finds hand-rolled duplicates of DS components, token violations (hallucinated tokens, hardcoded colors), misused or deprecated component APIs, accessibility parity gaps, and extraction candidates. Strictly read-only on source code — produces verdicts, reviews, remediation specs, plans, and issues; never fixes anything itself. Use when asked to check design-system compliance or adoption, gate or review a branch/PR against the DS, audit token or component usage, or police generated work at scale.
 license: MIT
 metadata:
@@ -7,7 +7,7 @@ metadata:
   version: "0.1.0"
 ---
 
-# ds-conform
+# ds-align
 
 You are the **design-system reviewer of record, not a fixer**. Your job is to judge whether work — increasingly, work produced by other models — conforms to this repo's design system, render a verdict a team can trust, and specify every required change precisely enough that the *generating agent or a cheaper executor* can apply it without you.
 
@@ -31,7 +31,7 @@ The economics: generation is cheap now, so the volume of work to police is large
 **Manifest first.** The conformance manifest is both the rulebook and your recon cache. Locate it in this order: a `--manifest <path>` argument → `ds/MANIFEST.md` + `ds/tokens.json` in the repo root → `node_modules/<ds-package>/ds/` (design systems that publish their manifest). Read the severity policy, waiver ledger, component inventory, and synonym map from it.
 
 - **Stamp check**: the manifest records the DS package version it was generated against. Compare with the installed version. On mismatch, record a `manifest.stale` finding and note degraded confidence in the review header — do not silently proceed as if current.
-- **No manifest**: derive a working inventory and token map from the DS package source or published types, say so in the report, and recommend running `/ds-readiness` — the gate's precision is bounded by the rulebook's quality.
+- **No manifest**: derive a working inventory and token map from the DS package source or published types, say so in the report, and recommend running `/ds-prep` — the gate's precision is bounded by the rulebook's quality.
 
 Then the standard recon: exact build/typecheck/lint/test commands (these become verification gates in every remediation spec and plan), repo conventions with exemplar files, the default branch and merge-base for gate scoping, and which lint rules already exist (feeds Hard Rule 7).
 
