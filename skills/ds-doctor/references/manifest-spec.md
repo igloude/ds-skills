@@ -2,7 +2,7 @@
 
 The manifest is the single contract between three parties who never share a session: **generating agents** (read it to produce conforming work), **ds-align** (reads it as recon cache and rulebook), and **humans** (review policy changes in PRs like any other code). It is two files because its consumers differ: prose and tables for agents and humans, resolved JSON for scripts.
 
-ds-prep owns this spec and is the only writer of generated zones. Hand-maintained zones belong to the DS owners.
+ds-doctor owns this spec and is the only writer of generated zones. Hand-maintained zones belong to the DS owners.
 
 **Publish it with the package.** Add `ds/` to the DS package's `files` array so every consuming repo gets the manifest via `node_modules/<pkg>/ds/` — that is how ds-align finds it in split-repo setups without any shared configuration.
 
@@ -17,7 +17,7 @@ Zone markers are load-bearing: regeneration rewrites `generated` zones and must 
 
 <!-- generated: header -->
 - **Package**: @scope/ds@4.2.0        ← the staleness stamp ds-align checks
-- **Generated**: 2026-07-23, commit `abc1234`, by ds-prep v0.1.0
+- **Generated**: 2026-07-23, commit `abc1234`, by ds-doctor v0.1.0
 - **Token source**: src/tokens/*.css → ds/tokens.json (resolved)
 <!-- /generated -->
 
@@ -107,6 +107,6 @@ What ds-align is entitled to rely on (and therefore what regeneration must never
 
 ## Update discipline
 
-- `/ds-prep manifest` after every DS release — cheap, mechanical, keeps the stamp current.
+- `/ds-doctor manifest` after every DS release — cheap, mechanical, keeps the stamp current.
 - Policy, severity, and waiver changes are hand edits, PR-reviewed like code — that is the point of them living in a markdown file in the repo.
 - If regeneration would collide with a hand zone (e.g. a hand-added inventory row), stop and report the conflict; resolving it is the DS owner's call.

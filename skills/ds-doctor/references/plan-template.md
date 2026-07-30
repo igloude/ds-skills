@@ -78,7 +78,7 @@ the drafted policy text itself so the executor is transcribing, not deciding.
 
 ## Maintenance notes
 
-What future DS changes must touch this doc; whether `/ds-prep manifest`
+What future DS changes must touch this doc; whether `/ds-doctor manifest`
 should be re-run after it lands (usually yes — say so explicitly).
 ```
 
