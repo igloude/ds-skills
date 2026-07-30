@@ -155,8 +155,8 @@ E-07 (custom-purple Owner badge) — sanctioned equivalent is `Tag variant="acce
 #### E-12 — Role selector · Covered · drawn
 - **Use**: `<Select variant="inline">` — source: ds
 - **Props**: `variant="inline"` (sits inside the recipient row) · `value` / `onValueChange` · three options: Admin, Member, Viewer
-- **Verified**: `packages/ui/src/Select/select.types.ts:9-27`; manifest inventory row `Select`
-- **Advisory — not a Don't build**: the inventory's "Use when" for `Select` reads *"Choosing one option from >5"*, and this is 3 options. That is orientation, not prohibition, and the system ships no radio-group component, so `Select` stands. Worth asking whether the guidance means "prefer radios under 5" — if so, the DS has a gap and the guidance has a hole. Raised in Manifest requests below.
+- **Verified**: `packages/ui/src/Select/select.types.ts:9-27`; manifest inventory row `Select` — "Use when" covers a list of any length, so three role options are in scope with no caveat.
+- **Not covered by this**: none.
 
 #### E-13 — Send button · Covered · drawn
 - **Use**: `<Button variant="primary" loading={isSending} disabled={recipients.length === 0}>`
@@ -227,10 +227,9 @@ Ordered by blocking count, then effort ascending.
 
 ## Token and manifest requests
 
-Route to `/ds-doctor` — neither is component work:
+Route to `/ds-doctor` — this is not component work:
 
 - **Role-color token**: E-07 wants a hue distinction between Owner and Admin that no semantic token provides. If design confirms the distinction is load-bearing, this is a token request, not a literal.
-- **`Select` "Use when" guidance**: the inventory says ">5 options" but the system ships no component for ≤5 (no radio group). Either the guidance needs a qualifier or the DS has a gap; today the guidance is unfollowable, which makes it unenforceable for `/ds-drift`.
 
 ## Not classified
 

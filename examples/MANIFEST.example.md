@@ -18,7 +18,7 @@
 | Button | stable | primary, secondary, ghost, danger | Any action trigger | — |
 | Dialog | stable | default, danger | Modal interruptions requiring a decision | Modal |
 | Drawer | stable | left, right | Supplementary panels; mobile navigation | Sidebar, Panel |
-| Select | stable | default, inline | Choosing one option from >5 | Dropdown, Picker |
+| Select | stable | default, inline | Choosing one option from a list of any length; the system's only single-select control | Dropdown, Picker |
 | Menu | stable | default | Action lists attached to a trigger | ContextMenu, Dropdown |
 | Tooltip | stable | default | Non-essential hover/focus hints | Hint |
 | Toast | stable | info, success, danger | Transient feedback | Snackbar, Notification |
