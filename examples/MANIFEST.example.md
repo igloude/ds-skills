@@ -44,7 +44,7 @@
 - **Contribution path**: DS gaps become issues labeled `ds-request`; interim
   hand-rolls require a waiver below, with an expiry.
 
-## Severity map (overrides ds-align defaults)
+## Severity map (overrides ds-drift defaults)
 
 | Class | Severity |
 |---|---|

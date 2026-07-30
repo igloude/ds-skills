@@ -1,8 +1,8 @@
 # Doc-Fix Plan Template
 
-A deliberately slimmer sibling of ds-align's plan template, duplicated here rather than shared: skills are self-contained at their boundaries, the same way plans are (a reference this skill can't see in another skill's folder is a broken reference). The three properties are identical — self-contained context, verification gates, hard boundaries with STOP conditions — trimmed to documentation work, which is lower-risk and ideal for the cheapest executors.
+A deliberately slimmer sibling of ds-drift's plan template, duplicated here rather than shared: skills are self-contained at their boundaries, the same way plans are (a reference this skill can't see in another skill's folder is a broken reference). The three properties are identical — self-contained context, verification gates, hard boundaries with STOP conditions — trimmed to documentation work, which is lower-risk and ideal for the cheapest executors.
 
-File naming: `plans/NNN-<slug>.md`, sharing the numbering and index with any existing `plans/` content (including ds-align's reviews — one directory, one sequence).
+File naming: `plans/NNN-<slug>.md`, sharing the numbering and index with any existing `plans/` content (including ds-drift's reviews — one directory, one sequence).
 
 ---
 

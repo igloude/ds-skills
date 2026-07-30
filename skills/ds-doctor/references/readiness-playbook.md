@@ -28,7 +28,7 @@ Per exported public component:
 
 The rulebook the gate enforces:
 
-- **Severity policy** — which violation classes are blocking/should-fix/advisory for this org. Absent, ds-align falls back to generic defaults; present, the gate reflects actual team judgment. Lives in the manifest's hand-maintained zone.
+- **Severity policy** — which violation classes are blocking/should-fix/advisory for this org. Absent, ds-drift falls back to generic defaults; present, the gate reflects actual team judgment. Lives in the manifest's hand-maintained zone.
 - **Override policy** — when is styling a DS component acceptable, and how (sanctioned seams vs. fighting it)?
 - **Composition rules** — required subcomponent structures, layout contracts, controlled/uncontrolled expectations.
 - **Contribution path** — what a team does when the DS lacks something. Without a stated path, every gap becomes a hand-rolled component; with one, it becomes an extraction request. This is the difference between the `adoption` category shrinking and growing over time.
