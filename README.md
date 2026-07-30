@@ -10,16 +10,17 @@ The idea: generation is cheap, the bottleneck is judgment. Have your most capabl
 
 ```
 /ds-doctor    →  audits the DS itself, writes ds/MANIFEST.md
-                 └→  everything below reads it
+                  └→  everything below reads it
 
-ticket/design →  /ds-plan  →  coverage map: every element in a bucket
-                              ├→ Covered / Composable  →  exact props, to the generators
-                              └→ Extension / Net-new    →  DS work items = the DS backlog
+/ds-plan      →  coverage map: every element in a bucket
+                  ├→ Covered / Composable  →  exact props, to the generators
+                  └→ Extension / Net-new   →  DS work items inform the DS backlog
 
 generators    →  N branches of AI work
+
 /ds-drift     →  gate | batch | sweep          (expensive model, judges)
-plans/        →  reviews: verdicts + specs     →  back to the generators
-                 plans: self-contained specs   →  cheap executors, or --issues
+                  ├→ reviews: verdicts + specs     →  back to the generators
+                  └→  plans: self-contained specs   →  cheap executors, or --issues
 ```
 
 ## The three skills
