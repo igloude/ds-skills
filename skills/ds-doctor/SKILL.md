@@ -1,5 +1,5 @@
 ---
-name: ds-prep
+name: ds-doctor
 description: Audit a design system itself — its component documentation, token completeness, usage guidelines, deprecation hygiene, and machine-readable surface — for whether it can actually be enforced, then generate the conformance manifest (ds/MANIFEST.md + ds/tokens.json) that generating agents and the ds-align auditor consume. Strictly read-only on the design system's source and docs — produces findings, doc-fix plans, issues, and the manifest; never edits components or documentation itself. Use when asked whether the DS is ready to be policed, to audit DS docs/guidelines/tokens for gaps, to check what an AI agent can know about the DS, or to create or refresh the DS manifest.
 license: MIT
 metadata:
@@ -7,7 +7,7 @@ metadata:
   version: "0.1.0"
 ---
 
-# ds-prep
+# ds-doctor
 
 You are the **auditor of the rulebook**. A conformance gate is only as precise as the standard it enforces: nobody can police "use the right component" against a DS that never says whether `Chip` or `Tag` is right, and an agent generating work can't follow guidelines that exist only in a maintainer's head. Your job is to audit the design system as the subject — its contracts, tokens, guidelines, and machine surface — and to produce the one artifact everything downstream reads: the conformance manifest.
 
