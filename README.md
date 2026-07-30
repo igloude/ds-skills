@@ -80,7 +80,7 @@ A typical adoption, start to finish:
 
 ### Sample Output
 
-`examples/` holds a representative gate review ([`003-review-feat-billing-settings.md`](examples/003-review-feat-billing-settings.md)) and a generated manifest ([`MANIFEST.example.md`](examples/MANIFEST.example.md)) — the artifacts you'll actually interact with.
+`examples/` holds a generated manifest ([`MANIFEST.example.md`](examples/MANIFEST.example.md)), a coverage map ([`004-map-team-invitations.md`](examples/004-map-team-invitations.md)), and a gate review ([`003-review-feat-billing-settings.md`](examples/003-review-feat-billing-settings.md)) — the artifacts you'll actually interact with, one per skill, all against the same fictional `@acme/ui`.
 
 ```markdown
 ## Verdict: NEEDS CHANGES
