@@ -25,13 +25,17 @@ generators    →  N branches of AI work
 
 ## The three skills
 
-**ds-doctor** audits the design system as the subject — component contracts, token completeness, guidelines, deprecation hygiene, machine surface — and generates the **conformance manifest** (`ds/MANIFEST.md` + `ds/tokens.json`): the one artifact generating agents, the planner, the auditor, and humans all read.
+**ds-doctor** audits the design system: component contracts, tokens, guidelines, deprecation hygiene, and generates the **manifest** (`ds/MANIFEST.md` + `ds/tokens.json`).
 
-**ds-plan** takes a ticket, spec, or design plus the manifest and classifies every UI element in the feature — including the states designs never draw — into one of five buckets: **Covered** (component + variant + the exact props), **Composable** (a sketch from two or more), **Extension** (a new variant or prop — DS work, with the API delta and blast radius), **Net-new** (a stubbed contract), **Don't build** (the system rejects this; here's the sanctioned equivalent). Then it sequences: DS work first and in its own repo, app work in parallel where nothing blocks it. Because buckets 3 and 4 emit work items, a feature plan doubles as a design system backlog.
+**ds-plan** takes a ticket, spec, or design and, using the DS manifest, it classifies every UI element in the feature into one of five buckets:
 
-**ds-drift** reviews app code against the design system: hand-rolled duplicates of DS components, token violations (including hallucinated tokens — the AI signature), misused or deprecated component APIs, a11y parity gaps, and extraction candidates. Verdicts come from a stated severity policy, not per-run vibes.
+- **Covered** (component + variant + the exact props)
+- **Composable** (a sketch from two or more)
+- **Extension** (a new variant or prop — DS work, with the API delta and blast radius)
+- **Net-new** (a stubbed contract)
+- **Don't build** (the system rejects this; here's the sanctioned equivalent). Then it sequences: DS work first and in its own repo, app work in parallel where nothing blocks it. Because buckets 3 and 4 emit work items, a feature plan doubles as a design system backlog.
 
-Planning and gating close a loop: `/ds-drift` should return **PASS** for every element `/ds-plan` marked Covered. When it doesn't, the map was wrong, and the correction is logged where the next map will see it.
+**ds-drift** reviews already completed code against the design system: hand-rolled duplicates of DS components, token violations (including hallucinated tokens), misused or deprecated component APIs, a11y parity gaps, and extraction candidates. Verdicts come from a stated severity policy.
 
 ## Install
 
@@ -72,12 +76,12 @@ Coverage maps, reviews, plans, and the manifest are plain markdown — any agent
 
 A typical adoption, start to finish:
 
-1. In the design-system repo, run `/ds-doctor`. Fix the blockers it finds (usually: unstated palette policy, unresolvable tokens, missing disambiguation), then `/ds-doctor manifest`. Publish `ds/` with the package so consuming repos get it via node_modules.
+1. In the design-system repo, run `/ds-doctor`. Fix the blockers it finds (usually: unstated palette policy, unresolvable tokens, disambiguation, etc.), then `/ds-doctor manifest`. Publish `ds/` with the package so consuming repos get it via node_modules.
 2. Point generating agents at the manifest's "Notes for generators" section from each app repo's `CLAUDE.md`.
-3. Before building a feature, run `/ds-plan <ticket-or-design>` in the app repo. Ship the DS work it puts in Wave 0 (it's already written as work items), start the Wave 1 app work in parallel, and hand the map itself to the agent doing the building — the Covered rows are props to transcribe, not advice to interpret.
-4. In an app repo, run `/ds-drift` on a feature branch. Read the verdict; feed the review file back to the agent that generated the work — the remediation specs are written for exactly that reader.
+3. Before building a feature, run `/ds-plan <ticket-or-design>` in the app repo. Ship any DS work it puts in Wave 0 (already written as work items), start the Wave 1 app work in parallel, and hand the map to the agent doing the building.
+4. In an app repo, run `/ds-drift` on a feature branch. Read the verdict; feed the remediation spec back to the agent that generated the work.
 5. Running parallel agents? `/ds-drift batch` the branches — the divergence pass catches the same component being invented three times, which no single-branch review can see.
-6. `/ds-drift sweep` periodically for the baseline, `coverage` for the trendline, `reconcile` to keep the record honest. When a violation class recurs across three reviews, the skill proposes the lint rule that retires it.
+6. `/ds-drift sweep` periodically for the baseline, `coverage` for the trendline, `reconcile` to keep the record honest. When a violation recurs across three reviews, the skill proposes a lint rule that retires it.
 
 ### Sample Output
 
