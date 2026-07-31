@@ -18,7 +18,7 @@ The idea: generation is cheap, the bottleneck is judgment. Have your most capabl
 
 generators    →  N branches of AI work
 
-/ds-drift     →  analyzes current state of codebase for DS adherance (capable model)
+/ds-drift     →  analyzes current state of codebase for DS adherence (capable model)
                   ├→ reviews: verdicts + specs    →  back to the generators
                   └→ plans: self-contained specs  →  cheap model, or --issues
 ```
