@@ -4,7 +4,7 @@
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-8A2BE2)](https://code.claude.com/docs/en/skills)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757)](#install)
 
-Police large volumes of AI-generated frontend work for design-system adherance — plan features against the system before they're built, and audit the design system itself so it *can* be policed.
+Police large volumes of AI-generated frontend work for design-system adherence, plan features against the system before they're built, and audit the design system itself so it *can* be policed.
 
 The idea: generation is cheap, the bottleneck is judgment. Have your most capable model use the skills, they will write remediation specs and plan fixes. Then route the fixes back to the more cost-effective models. The skills should never change a line of code.
 
