@@ -106,7 +106,7 @@ The manifest's severity map overrides this table; these are the fallbacks. Verdi
 | `a11y.parity-gap` (pre-existing) | should-fix | Real harm, but not this branch's doing |
 | `token.literal.none` | should-fix | Escalates to design review, never a codemod |
 | `usage.wrong-variant` | advisory | Judgment call territory |
-| `extraction.*` | advisory | Options, not violations |
+| `extraction.*` | advisory | Options, not violations — excluded from verdict tiering; extraction candidates alone never downgrade a PASS |
 | `manifest.stale` | header note — never verdict-counted | Scope-level condition, not the branch's doing: it degrades confidence in the review header and is neither `introduced` nor `pre-existing` |
 
 ## Recurrence → automation

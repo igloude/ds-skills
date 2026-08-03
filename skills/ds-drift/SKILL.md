@@ -55,7 +55,7 @@ Subagents and greps over-report. Before anything reaches a verdict or table, ope
 
 The modes diverge here:
 
-- **Gate / batch** → write `plans/NNN-review-<slug>.md` per [references/review-template.md](references/review-template.md) — read it before the first review. Render the verdict from introduced findings only: any blocking → **NEEDS CHANGES**; should-fix or advisory only → **PASS WITH FINDINGS**; none or waived-only → **PASS**. Every blocking finding carries an inline remediation spec. No selection step — a gate that asks which violations to spec is not a gate.
+- **Gate / batch** → write `plans/NNN-review-<slug>.md` per [references/review-template.md](references/review-template.md) — read it before the first review. Render the verdict from introduced findings only: any blocking → **NEEDS CHANGES**; should-fix or advisory only → **PASS WITH FINDINGS**; none or waived-only → **PASS**. `extraction.*` findings are excluded from this tiering — they are options, not violations, so a branch whose only findings are extraction candidates is a **PASS** (candidates still listed under Advisory). Every blocking finding carries an inline remediation spec. No selection step — a gate that asks which violations to spec is not a gate.
 - **Sweep** → present the vetted findings table ordered by leverage, with extraction candidates presented separately after it (they are options for the DS owner, not problems ranked against violations). Ask which findings become plans; do not write thirty plans nobody asked for. Selected findings become `plans/NNN-<slug>.md` per [references/plan-template.md](references/plan-template.md), stamped with the current commit, excerpts from your own reads only, plus the index.
 
 ## Invocation variants
