@@ -43,6 +43,13 @@ generators    →  N branches of AI work
 npx skills add igloude/ds-skills
 ```
 
+Or as a Claude Code plugin:
+
+```
+/plugin marketplace add igloude/ds-skills
+/plugin install ds-skills@igloude
+```
+
 ## Usage
 
 Coverage maps, reviews, plans, and the manifest are plain markdown — any agent or human can pick them up. The only runtime dependency is Node 18+ for the token classifier script; everything else is markdown.
