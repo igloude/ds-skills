@@ -17,12 +17,14 @@ File naming: `plans/NNN-<slug>.md`, sharing the numbering and index with coverag
 
 > **Executor instructions**: Follow this plan step by step. Run every
 > verification command and confirm the expected result before moving on. If any
-> STOP condition occurs, stop and report — do not improvise. When done, update
-> this plan's row in `plans/README.md`.
+> STOP condition occurs, stop and report — do not improvise. When done, report
+> completion back to the requester (this plan's index lives in the requesting
+> app repo, not here).
 >
-> **Drift check (run first)**: `git diff --stat <planned-at SHA>..HEAD -- <in-scope paths>`
-> If any in-scope file changed since this plan was written, compare the "Current
-> state" excerpts against live code; on mismatch, STOP.
+> **Drift check (run first)**: this plan was written from the *consuming app
+> repo* — its commit SHAs are not valid in this repo. Instead, compare every
+> "Current state" excerpt below against this repo's live code at its cited
+> `file:line`; on any mismatch, STOP.
 
 ## Status
 
@@ -31,9 +33,11 @@ File naming: `plans/NNN-<slug>.md`, sharing the numbering and index with coverag
 - **Class**: `ds.extension.variant` | `ds.extension.prop`
 - **Delta class**: additive | behavior-changing
 - **Repo**: design system
-- **Requested by**: `plans/NNN-map-<slug>.md`, elements <ids> — <feature name>
+- **Requested by**: <feature name>, elements <ids> — coverage map `plans/NNN-map-<slug>.md`
+  in the requesting app repo (not readable from this repo; the demand evidence is inlined below)
 - **Depends on**: plans/NNN-*.md (or "none")
-- **Planned at**: commit `<short SHA>`, <YYYY-MM-DD>
+- **Planned at**: <YYYY-MM-DD>, against `@scope/ds@<installed version>` (app-repo commit
+  `<short SHA>` — informational only; not a valid ref in this repo)
 - **Issue**: <URL — only when published via --issues>
 
 ## Why this matters
@@ -119,8 +123,14 @@ unaffected. Name the existing test file whose structure to match.
 - [ ] typecheck / lint / tests / stories exit 0
 - [ ] The new API appears in the docs page and the component's story set
 - [ ] No files outside the in-scope list modified (`git status`)
-- [ ] `/ds-doctor manifest` re-run so the inventory row reflects the new variant
-- [ ] plans/README.md row updated, and the requesting coverage map's Wave 0 row marked done
+
+## Hand back to the requester
+
+Not the executor's work — these live in other repos or need the skills. On merge,
+the requester:
+- re-runs `/ds-doctor manifest` in this DS repo so the inventory row reflects the new API;
+- marks the coverage map's Wave 0 row done and updates this plan's row in the
+  app repo's `plans/README.md`.
 
 ## STOP conditions
 
@@ -190,7 +200,7 @@ with no removal step is a permanent duplicate.
 - [ ] The contract above is reviewed and approved or amended by the DS owner
 - [ ] Open questions all have recorded answers
 - [ ] A build plan is written (separate file) — **this plan does not build it**
-- [ ] plans/README.md row updated
+- [ ] Outcome reported to the requester, who updates this plan's row in the app repo's `plans/README.md`
 ```
 
 ---
