@@ -32,9 +32,9 @@ Run the mechanical classification first: dedupe literals, run `scripts/nearest_t
 - Tailwind arbitrary values: `-[#...]`, `-[rgb(...)]`.
 - Raw palette classes (`bg-blue-500`) — only if the manifest's palette policy forbids them; this policy changes hit counts by an order of magnitude, so never guess it.
 - Inline style objects with color-ish keys, styled-components/emotion literals, SVG `fill`/`stroke` in checked-in assets and JSX, canvas fill/stroke styles.
-- **Nonexistent token references**: `var(--anything)` and theme-object paths that do not resolve against `ds/tokens.json`. Check every reference, not just literals.
+- **Nonexistent token references**: `var(--…)` and theme-object paths that resolve neither against `ds/tokens.json` **nor against a definition anywhere in the repo's own stylesheets/theme code**. An app-local custom property that resolves is not hallucinated — audit its *definition's value* under the literal rules instead. A reference inside the DS's naming namespace (e.g. `--acme-*`, per the manifest) that is defined nowhere is `token.hallucinated`. Check every reference, not just literals.
 
-**AI signatures**: *hallucinated tokens* — `var(--color-brand-primary)` that has never existed in this repo (plausible name, no definition; mechanically checkable, always blocking); default-Tailwind palette bleed (slate/gray/blue-500 families) in semantic-token repos; shadcn CSS-variable idioms (`hsl(var(--primary))`) in repos with a different token architecture.
+**AI signatures**: *hallucinated tokens* — `var(--color-brand-primary)` that has never existed in this repo (plausible name, no definition anywhere — tokens or app styles; mechanically checkable, always blocking); default-Tailwind palette bleed (slate/gray/blue-500 families) in semantic-token repos; shadcn CSS-variable idioms (`hsl(var(--primary))`) in repos with a different token architecture.
 
 Distinguish in reporting: **exact** matches are codemod-ready; **near** (ΔE ≤ 10) need a human eye — occasionally deliberate; **none** is a design decision (new token or off-brand), never a codemod. Data-viz palettes are chart-token gaps, not UI-token violations. Shadows and gradients: report the embedded color, not the whole value.
 

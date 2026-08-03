@@ -24,7 +24,7 @@
 
     style={{ borderColor: 'var(--acme-color-primary-dark)' }}
 
-**Why blocking**: the token does not exist in `ds/tokens.json` — the border silently renders `currentColor` today (manifest severity map: `token.hallucinated` → blocking).
+**Why blocking**: the token is defined neither in `ds/tokens.json` nor anywhere in the repo's own styles — the border silently renders `currentColor` today (manifest severity map: `token.hallucinated` → blocking).
 
 **Remediation**:
 - Change: `var(--acme-color-primary-dark)` → `var(--color-border-interactive)` (resolves `#0353e9`, the evident intent per the adjacent `--color-interactive` usage on line 44)
