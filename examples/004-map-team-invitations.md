@@ -28,7 +28,7 @@
 | Covered | 10 | Build now, props below |
 | Composable | 2 | Build now, sketch below |
 | Extension | 1 | **DS work — blocks app work** |
-| Net-new | 3 | **DS work — blocks app work** |
+| Net-new | 3 | **DS or app work — blocks app work** |
 | Don't build | 1 | Routed back to design |
 
 **Blocking DS work**: three items — `Tag` gains a dismiss affordance (S), a multi-value email field (L, RFC first), and an inline alert for partial failures (M). Twelve of seventeen elements are unblocked and can start today.
