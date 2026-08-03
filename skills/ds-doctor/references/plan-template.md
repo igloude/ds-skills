@@ -55,6 +55,12 @@ what becomes enforceable once closed.
 if correct docs would require a code change, that is a STOP condition, not
 an invitation.
 
+## Git workflow
+
+Branch `ds-docs/NNN-<slug>` (or the repo's evident convention); commit per
+step, message style matched to `git log`. Do NOT push or open a PR unless
+instructed.
+
 ## Steps
 
 ### Step 1: <imperative title>
