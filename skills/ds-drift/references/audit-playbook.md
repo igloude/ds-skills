@@ -26,6 +26,8 @@ Vet requirement before any adoption finding: open the DS component's types and m
 
 ## 2. Tokens — color values that bypass the token system
 
+**Scope**: this category audits *color*. Spacing, typography, radius, shadow, and z-index drift are not audited by this skill — state that in the review's "Not audited" line rather than letting a PASS imply full token conformance.
+
 Run the mechanical classification first: dedupe literals, run `scripts/nearest_token.mjs`, and let the exact/near/none/unparsed classes be the evidence.
 
 - Literals: `#hex`, `rgb()/rgba()`, `hsl()/hsla()`, `oklch()`, `color-mix()`. (`transparent`, `currentColor`, `inherit` are semantics, not colors — skip.)

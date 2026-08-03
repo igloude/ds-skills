@@ -23,6 +23,7 @@ Per exported public component:
 - **Theme parity** — every token defined in every theme; missing dark-mode entries are silent fallbacks in production.
 - **Palette policy stated** — are raw palette utilities (`bg-blue-500`) permitted, and where? This single unstated policy is the largest source of both violations and false positives downstream. If it isn't written, that is a blocking finding for the `tokens` category, and the fix is a one-paragraph policy decision — flag it as the cheapest high-leverage item in the whole audit.
 - **Naming consistency** — one convention, no synonym tokens with drifted values (`--gray-500` and `--grey-500` both existing is a finding with a deprecation path).
+- **Enforcement scope stated** — ds-drift's mechanical enforcement covers color tokens only today; spacing, typography, radius, and shadow tokens are policed by docs and review, not the gate. Say so in the manifest's token-layer facts so a conformance PASS is read correctly.
 
 ## 3. Guidelines & policy
 
