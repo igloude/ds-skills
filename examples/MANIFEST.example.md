@@ -6,7 +6,7 @@
 
 <!-- generated: header -->
 - **Package**: @acme/ui@4.2.0
-- **Generated**: 2026-07-23, commit `f7a19d2`, by ds-doctor v0.1.0
+- **Generated**: 2026-07-23, commit `f7a19d2`, by ds-doctor v0.2.0
 - **Token source**: packages/ui/src/tokens/*.css → ds/tokens.json (62 tokens, themes: light, dark)
 <!-- /generated -->
 

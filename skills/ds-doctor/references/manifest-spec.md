@@ -17,7 +17,7 @@ Zone markers are load-bearing: regeneration rewrites `generated` zones and must 
 
 <!-- generated: header -->
 - **Package**: @scope/ds@4.2.0        ← the staleness stamp ds-drift checks
-- **Generated**: 2026-07-23, commit `abc1234`, by ds-doctor v0.1.0
+- **Generated**: 2026-07-23, commit `abc1234`, by ds-doctor vX.Y.Z
 - **Token source**: src/tokens/*.css → ds/tokens.json (resolved)
 <!-- /generated -->
 
