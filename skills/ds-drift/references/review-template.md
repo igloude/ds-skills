@@ -117,6 +117,13 @@ One index for the whole `plans/` directory, shared with plan files (the plan tem
 
 - <finding>: <one line why — by-design, toolchain-covered, waived-by, replacement-gap>.
   (So the next run doesn't re-litigate it. Shared with plans — one list.)
+
+## Coverage baselines
+
+Appended by every sweep and coverage run; the deltas `coverage` reports are
+computed against the previous row.
+
+| Date | Commit | DS adoption | Token compliance | Per-package notes |
 ```
 
 ## Quality bar — check before finishing each review

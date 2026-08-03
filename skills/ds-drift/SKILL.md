@@ -64,7 +64,7 @@ The modes diverge here:
 - `batch <ref> <ref> ...` → gate each ref plus the cross-set divergence pass; one review file per ref plus a batch summary.
 - `sweep` → full-repo audit with the selection step. `quick` / `deep` anywhere in the invocation set the effort dial; default `standard`.
 - Category focus (`tokens`, `adoption`, `usage`, `a11y`, `extraction`) → restrict any mode to that category. Composes: `sweep tokens deep`.
-- `coverage` → metrics only, no findings table, no plans: DS adoption rate, token compliance rate, per-package deltas since the last sweep. The drift dashboard between baselines.
+- `coverage` → metrics only, no findings table, no plans: DS adoption rate, token compliance rate, per-package deltas since the last sweep. The drift dashboard between baselines. Baselines live in the index's "Coverage baselines" table — append a row each run; with no prior row, report absolutes and start the table.
 - `upgrade <version|changelog>` → impact audit for a DS version bump: affected call sites per breaking change, codemod-able vs. needs-judgment split, ordered upgrade plan.
 - `plan <finding-id|description>` → skip the audit; investigate just enough to spec one remediation properly and write a single plan.
 - `review-plan <file>` → critique an existing plan or remediation spec against the template's standards and tighten it.
