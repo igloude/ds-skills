@@ -2,7 +2,7 @@
 
 The coverage map is the skill's primary artifact and it has three readers who never share a session: a **generating agent** building the feature (it needs props it can transcribe), an **engineer or PM** sequencing the work (they need the waves), and a **DS maintainer** triaging what the feature exposed (they need the work items). Write for all three; each gets its own section rather than a compromise between them.
 
-File naming: `plans/NNN-map-<slug>.md`. Coverage maps share `plans/`, its numbering sequence, and its index with reviews and plans; the `-map-` slug distinguishes them at a glance.
+File naming: `plans/NNN-map-<slug>.md`. Coverage maps share `plans/`, its numbering sequence, and its index with reviews and plans; the `-map-` slug distinguishes them at a glance. Parallel branches can race the sequence: number from the highest NNN visible across the default branch *and* your own branch; if a merge still collides, the later-merged file renumbers and its index row moves with it.
 
 ---
 

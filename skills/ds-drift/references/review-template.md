@@ -8,7 +8,7 @@ Three properties make a review actionable:
 2. **Remediation specs, not descriptions** — every blocking finding carries current-state excerpt, exact change, and a verification command with expected output. The fixer never judges whether it succeeded.
 3. **Scope honesty** — what was audited, what wasn't, and what the toolchain already covers. A review that overclaims its coverage gets one bad merge before nobody trusts it.
 
-File naming: `plans/NNN-review-<branch-or-pr-slug>.md`. Reviews and plans share `plans/` and one monotonic numbering sequence; the `-review-` slug is what tells them apart.
+File naming: `plans/NNN-review-<branch-or-pr-slug>.md`. Reviews and plans share `plans/` and one monotonic numbering sequence; the `-review-` slug is what tells them apart. Parallel branches can race the sequence: number from the highest NNN visible across the default branch *and* your own branch; if a merge still collides, the later-merged file renumbers and its index row moves with it.
 
 ---
 
