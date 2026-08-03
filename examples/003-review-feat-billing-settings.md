@@ -13,7 +13,7 @@
 - **Manifest**: `node_modules/@acme/ui/ds/MANIFEST.md` @ @acme/ui@4.2.0 (current)
 - **Counts** (introduced): blocking 2 · should-fix 3 · advisory 1 · waived 0
 - **Pre-existing** (in touched files, not counted in verdict): 2 — see backlog
-- **Not audited**: `apps/billing/emails/**` (manifest exclusion — inline styles load-bearing); extraction ran, a11y ran, upgrade did not
+- **Not audited**: `apps/billing/emails/**` (manifest exclusion — inline styles load-bearing); non-color token drift (outside this skill's token scope). All five categories ran.
 - **Toolchain note**: nothing below duplicates tsc/eslint output; 3 unused-import hits already covered by eslint and omitted.
 
 ## Blocking (introduced)
@@ -28,7 +28,7 @@
 
 **Remediation**:
 - Change: `var(--acme-color-primary-dark)` → `var(--color-border-interactive)` (resolves `#0353e9`, the evident intent per the adjacent `--color-interactive` usage on line 44)
-- Verify: `node scripts/check.mjs` not required — `grep -rn "acme-color-primary-dark" apps/billing/src/` → no matches; `pnpm typecheck` → exit 0
+- Verify: `grep -rn "acme-color-primary-dark" apps/billing/src/` → no matches; `pnpm typecheck` → exit 0
 - STOP if: the intended color was genuinely the darker brand shade — no such semantic token exists; that is a `ds-request` issue, not an inline literal.
 
 ### [ADO-02] Replace hand-rolled confirmation dialog with `Dialog`   `adoption.duplicate`
