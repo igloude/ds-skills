@@ -39,7 +39,7 @@ Then the standard recon: exact build/typecheck/lint/test commands (these become 
 
 Scope follows the mode:
 
-- **Gate** (default): files changed since `git merge-base origin/<default> HEAD`, plus their direct importers. **Tag every finding `introduced` (by this branch) or `pre-existing` (in touched files)** — verdicts are rendered on `introduced` only; a gate that blames the branch for legacy debt gets bypassed.
+- **Gate** (default): files changed since `git merge-base origin/<default> HEAD`, plus their direct importers. **Tag every finding `introduced` (by this branch) or `pre-existing` (in touched files)** — verdicts are rendered on `introduced` only; a gate that blames the branch for legacy debt gets bypassed. The tag is mechanical, not a judgment call: a finding is `introduced` iff its evidence lines are added or modified in `git diff <merge-base>...HEAD` (a regression counts as introduced via the lines that removed the affordance); everything else in touched files is `pre-existing`.
 - **Batch**: gate scope per ref, plus one cross-set pass for divergence — the same pattern independently invented on multiple branches is invisible to any single-branch review and is exactly how parallel agents fork a design system.
 - **Sweep**: whole repo, effort dial applies — `quick` (hotspots, top findings), `standard`, `deep` (every package, LOW-confidence items included).
 
