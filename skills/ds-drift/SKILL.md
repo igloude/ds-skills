@@ -45,7 +45,7 @@ Scope follows the mode:
 
 Audit against the categories in [references/audit-playbook.md](references/audit-playbook.md) — read it now: **adoption, tokens, usage, a11y, extraction**, each with the AI-generation failure signatures to watch for. For sweeps of any real size, fan out parallel read-only subagents per category. Subagents do not inherit this skill's context, so each prompt must include: the absolute path to the playbook plus the section headings to read (always including "Finding format"), the recon facts that scope the search, the manifest's waiver ledger and severity digest (so subagents can *annotate* findings that look waived — they still report them; matching and exclusion happen in Vet, never in a subagent), a findings-only instruction, and a verbatim copy of Hard Rules 4 and 6.
 
-For token findings, classify literals mechanically: write the deduplicated literals to a file and run `node <skill-dir>/scripts/nearest_token.mjs <tokens.json> <literals.txt>` — the script ships with **this skill**, not the audited repo, so resolve `<skill-dir>` to this skill's install directory (requires Node 18+). It returns exact / near / none with ΔE distances. The classes are the evidence; don't eyeball color distance.
+For token findings, classify literals mechanically: write the deduplicated literals to a file and run `node <skill-dir>/scripts/nearest_token.mjs <tokens.json> <literals.txt>` — the script ships with **this skill**, not the audited repo, so resolve `<skill-dir>` to this skill's install directory (requires Node 18+). It returns exact / near / none / unparsed with ΔE distances. The classes are the evidence; don't eyeball color distance, and never drop `unparsed` rows — they resolve manually.
 
 ### Phase 3 — Vet
 

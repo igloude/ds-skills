@@ -26,7 +26,7 @@ Vet requirement before any adoption finding: open the DS component's types and m
 
 ## 2. Tokens — color values that bypass the token system
 
-Run the mechanical classification first: dedupe literals, run `scripts/nearest_token.mjs`, and let the exact/near/none classes be the evidence.
+Run the mechanical classification first: dedupe literals, run `scripts/nearest_token.mjs`, and let the exact/near/none/unparsed classes be the evidence.
 
 - Literals: `#hex`, `rgb()/rgba()`, `hsl()/hsla()`, `oklch()`, `color-mix()`. (`transparent`, `currentColor`, `inherit` are semantics, not colors — skip.)
 - Tailwind arbitrary values: `-[#...]`, `-[rgb(...)]`.
@@ -36,7 +36,7 @@ Run the mechanical classification first: dedupe literals, run `scripts/nearest_t
 
 **AI signatures**: *hallucinated tokens* — `var(--color-brand-primary)` that has never existed in this repo (plausible name, no definition anywhere — tokens or app styles; mechanically checkable, always blocking); default-Tailwind palette bleed (slate/gray/blue-500 families) in semantic-token repos; shadcn CSS-variable idioms (`hsl(var(--primary))`) in repos with a different token architecture.
 
-Distinguish in reporting: **exact** matches are codemod-ready; **near** (ΔE ≤ 10) need a human eye — occasionally deliberate; **none** is a design decision (new token or off-brand), never a codemod. When the matched token carries a theme suffix (`token@dark`), confirm the literal's context actually renders in that theme before recommending the swap — a light-context literal matching a dark-theme value is `near`, not `exact`. Data-viz palettes are chart-token gaps, not UI-token violations. Shadows and gradients: report the embedded color, not the whole value.
+Distinguish in reporting: **exact** matches are codemod-ready; **near** (ΔE ≤ 10) need a human eye — occasionally deliberate; **none** is a design decision (new token or off-brand), never a codemod. When the matched token carries a theme suffix (`token@dark`), confirm the literal's context actually renders in that theme before recommending the swap — a light-context literal matching a dark-theme value is `near`, not `exact`. **unparsed** rows (oklch, color-mix, anything the script can't read) are findings pending manual resolution — report them with the raw literal, never drop them, and never include them in a codemod. Data-viz palettes are chart-token gaps, not UI-token violations. Shadows and gradients: report the embedded color, not the whole value.
 
 ## 3. Usage — DS components used against their own API
 

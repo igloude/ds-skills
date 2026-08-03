@@ -135,7 +135,9 @@ The skeleton above always applies; each category adds its load-bearing section.
 - The mapping table from `nearest_token.mjs` output, split hard: **exact**
   rows are the codemod; **near** rows require human confirmation and are
   listed as a STOP-gated second phase, never merged with exact; **none** rows
-  are excluded entirely (design review, not this plan).
+  are excluded entirely (design review, not this plan); **unparsed** rows are
+  resolved manually before planning — any still-unresolved row is named in the
+  plan's STOP conditions, never silently dropped.
 - Done criterion includes re-running the script over the in-scope files →
   zero exact matches remain.
 
