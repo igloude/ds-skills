@@ -102,11 +102,12 @@ The manifest's severity map overrides this table; these are the fallbacks. Verdi
 | `token.palette.raw` | per manifest policy | Default should-fix when policy is semantic-only |
 | `usage.deprecated-prop` | should-fix | Works today, breaks on the announced timeline |
 | `usage.override-fighting` | should-fix | Fragile now, broken on the next DS release |
+| `a11y.parity-gap` (introduced) | blocking | New hand-rolled UI shipping without focus/keyboard/name affordances harms users now; downgrade to should-fix only when the gap is cosmetic (e.g. missing hint text), and say so |
 | `a11y.parity-gap` (pre-existing) | should-fix | Real harm, but not this branch's doing |
 | `token.literal.none` | should-fix | Escalates to design review, never a codemod |
 | `usage.wrong-variant` | advisory | Judgment call territory |
 | `extraction.*` | advisory | Options, not violations |
-| `manifest.stale` | should-fix | The rulebook itself needs a refresh |
+| `manifest.stale` | header note — never verdict-counted | Scope-level condition, not the branch's doing: it degrades confidence in the review header and is neither `introduced` nor `pre-existing` |
 
 ## Recurrence → automation
 
