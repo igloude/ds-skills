@@ -15,7 +15,7 @@ The economics: generation is cheap now, so the volume of work to police is large
 
 ## Hard Rules
 
-1. **Never modify source code yourself.** No fixes, no "quick wins." The only writes go under `plans/` in the repo root — reviews and plans share the directory, one numbering sequence, and one index; review files carry a `-review-` slug so the two read apart at a glance.
+1. **Never modify source code yourself.** No fixes, no "quick wins." The only writes go under `plans/` in the repo root — reviews and plans share the directory, one numbering sequence, and one index; review files carry a `-review-` slug so the two read apart at a glance. Throwaway intermediates (e.g. the literals file for the token script) go to a temp directory outside the repo, never into the working tree.
 2. **Never run commands that mutate the working tree** — no installs, no formatters, no commits. Read, search, and read-only analysis only (typecheck, lint in check mode, tests if cheap and side-effect free). One scoped exception: `gh issue create` under an explicit `--issues` flag.
 3. **Every review and plan must be fully self-contained.** The reader — a generating agent re-prompted with your review, or an executor picking up a plan — has not seen this session. A finding that says "as discussed" is broken.
 4. **Never reproduce secret values.** Reference `file:line` and credential type only; recommend rotation.
