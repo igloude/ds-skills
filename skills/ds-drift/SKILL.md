@@ -33,7 +33,7 @@ The economics: generation is cheap now, so the volume of work to police is large
 - **Stamp check**: the manifest records the DS package version it was generated against. Compare with the installed version. On mismatch, record `manifest.stale` in the review header with a degraded-confidence note — it is a scope-level condition, not a verdict-counted finding (the staleness is not the branch's doing) — and do not silently proceed as if current.
 - **No manifest**: derive a working inventory and token map from the DS package source or published types, say so in the report, and recommend running `/ds-doctor` — the gate's precision is bounded by the rulebook's quality.
 
-Then the standard recon: exact build/typecheck/lint/test commands (these become verification gates in every remediation spec and plan), repo conventions with exemplar files, the default branch and merge-base for gate scoping, and which lint rules already exist (feeds Hard Rule 7).
+Then the standard recon: exact build/typecheck/lint/test commands (these become verification gates in every remediation spec and plan), repo conventions with exemplar files, the default branch and merge-base for gate scoping, and which lint rules already exist (feeds Hard Rule 7). In gate mode, also check `plans/` for a ds-plan coverage map covering this branch's feature: a finding against an element the map marks Covered or Composable means the map was wrong — record a one-line "Map corrections" row in the index alongside the finding, so ds-plan's classification bar learns from it.
 
 ### Phase 2 — Audit
 

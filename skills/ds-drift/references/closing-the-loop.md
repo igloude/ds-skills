@@ -18,6 +18,10 @@ Process what happened since the last session. Read `plans/README.md` (the shared
 - **TODO** — run the drift check. If drifted, re-verify the finding still exists (it may have been fixed in passing), refresh the current-state excerpts and `Planned at` SHA. If gone, REJECTED ("fixed independently").
 - **IN PROGRESS** (stale) — flag to the user; an executor likely died mid-run.
 
+**Coverage maps** (if `plans/` contains ds-plan maps)
+- Manifest stamp moved since a map was planned → mark the map STALE in the index and point at `/ds-plan recheck`.
+- Maps whose feature branches merged → mark BUILT; spot-check that gate reviews of those branches recorded any due "Map corrections" rows.
+
 **Waivers**
 - Expired waivers, waivers with no owner, and waivers whose matched locations no longer exist are each a finding for the next review or sweep. A waiver ledger nobody audits becomes a hole in the gate.
 
