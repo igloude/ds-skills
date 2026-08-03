@@ -121,3 +121,4 @@ What ds-drift is entitled to rely on (and therefore what regeneration must never
 - `/ds-doctor manifest` after every DS release — cheap, mechanical, keeps the stamp current.
 - Policy, severity, and waiver changes are hand edits, PR-reviewed like code — that is the point of them living in a markdown file in the repo.
 - If regeneration would collide with a hand zone (e.g. a hand-added inventory row), stop and report the conflict; resolving it is the DS owner's call.
+- A manifest with no zone markers at all (hand-written before ds-doctor) is treated as entirely hand-maintained: write nothing, report it, and propose the marker retrofit as a doc-fix plan.
