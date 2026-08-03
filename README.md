@@ -58,13 +58,18 @@ Coverage maps, reviews, plans, and the manifest are plain markdown — any agent
 /ds-doctor                      full DS audit → readiness summary → doc-fix plans
 /ds-doctor manifest             regenerate ds/MANIFEST.md + ds/tokens.json (run per release)
 /ds-doctor component <name>     one component's contract, in depth
+/ds-doctor tokens               token-layer category only
+/ds-doctor quick|deep           effort dial
+/ds-doctor ... --issues         publish selected doc-fix plans as GitHub issues
 
 /ds-plan <ticket|spec|design>   classify every element → coverage map + build sequence
 /ds-plan element <description>  one element, fast — "do we have something for this?"
+/ds-plan surface <name>         restrict a large feature to one screen or flow
 /ds-plan quick|deep             effort dial (deep walks the full state matrix)
 /ds-plan backlog                aggregate DS work items across every map, ranked by what they block
 /ds-plan recheck <map>          re-validate a map after a DS release
 /ds-plan ... --issues           file the extensions and gaps as ds-request issues
+/ds-plan ... --manifest <path>  override manifest discovery
 
 /ds-drift                       gate the current branch → verdict + review
 /ds-drift batch <refs...>       review N agent branches + cross-branch divergence
@@ -77,6 +82,7 @@ Coverage maps, reviews, plans, and the manifest are plain markdown — any agent
 /ds-drift review-plan <file>    critique and tighten an existing plan
 /ds-drift reconcile             verify, refresh, retire; audit waivers; promote lint rules
 /ds-drift ... --issues          also publish as GitHub issues
+/ds-drift ... --manifest <path> override manifest discovery
 ```
 
 ## Example
