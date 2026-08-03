@@ -67,6 +67,8 @@ recorded so sweeps can pick them up. Title, class, location, severity-if-introdu
 ## Recurrence
 
 Classes seen this review: `token.literal.exact` (x4), `usage.deprecated-prop` (x1).
+(Counts are findings, not evidence locations; list every class that appeared,
+including advisory ones.)
 <If any class has now appeared in 3+ reviews per the index: "`class` has recurred
 across N reviews — graduating to a lint-rule plan; see plans/ or next sweep.">
 ```

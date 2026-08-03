@@ -63,5 +63,5 @@ None matched this run.
 
 ## Recurrence
 
-Classes seen this review: `token.literal.exact` (x2), `token.hallucinated` (x1), `adoption.duplicate` (x1), `usage.deprecated-prop` (x1).
+Classes seen this review: `token.hallucinated` (x1), `adoption.duplicate` (x1), `token.literal.near` (x1), `token.literal.exact` (x1), `usage.deprecated-prop` (x1), `extraction.candidate` (x1).
 `usage.deprecated-prop` has now appeared in 3 reviews (001, 002, 003) — graduating: proposing a lint-rule plan (`no-deprecated-ds-props`, driven by the manifest inventory) in the next sweep.
