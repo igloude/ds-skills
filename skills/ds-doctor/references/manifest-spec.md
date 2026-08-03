@@ -110,7 +110,7 @@ Flat, fully resolved — literals only, because its consumer is a script, not a 
 
 What ds-drift is entitled to rely on (and therefore what regeneration must never break):
 
-1. **Discovery order**: `--manifest <path>` → `./ds/` → `node_modules/<pkg>/ds/`.
+1. **Discovery order**: `--manifest <path>` → `./ds/` → `node_modules/<pkg>/ds/`. The package is identified mechanically, never guessed: glob `node_modules/{*,@*/*}/ds/MANIFEST.md`. Exactly one hit is the manifest; multiple hits → report them and ask for `--manifest`; zero → the no-manifest path.
 2. **Staleness**: the header's `Package` stamp vs. the installed version. Mismatch → `manifest.stale` finding + degraded-confidence note; never silent.
 3. **Stable zone semantics**: inventory table columns, severity-map shape, waiver-table shape as above. Additive changes are fine; renames are breaking and require a version note in the header.
 4. Waiver matching is `glob × class`; expired waivers are dead (and reconcile flags them).

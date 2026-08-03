@@ -30,7 +30,7 @@ The output is falsifiable, which is the point: run `/ds-drift` on the branch tha
 
 ### Phase 1 — Recon
 
-**Manifest first.** Same discovery order as ds-drift: `--manifest <path>` → `ds/MANIFEST.md` + `ds/tokens.json` in the repo root → `node_modules/<ds-package>/ds/`. Read the component inventory, variants, synonym map, policy zone, deprecations, and waiver ledger — this is the entire basis for classification.
+**Manifest first.** Same discovery order as ds-drift: `--manifest <path>` → `ds/MANIFEST.md` + `ds/tokens.json` in the repo root → `node_modules/<ds-package>/ds/` (find the package by globbing `node_modules/{*,@*/*}/ds/MANIFEST.md`; multiple hits → report them and ask for `--manifest`, never guess). Read the component inventory, variants, synonym map, policy zone, deprecations, and waiver ledger — this is the entire basis for classification.
 
 - **Stamp check**: compare the manifest's package version against the installed one. On mismatch, say so in the map header — planning against a stale inventory produces extensions for variants that already shipped.
 - **No manifest**: derive a working inventory from the DS package's public entry point and types, mark the map's confidence degraded, and recommend `/ds-doctor`. Every classification here is a guess proportional to the rulebook's quality.
