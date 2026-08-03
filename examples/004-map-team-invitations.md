@@ -53,7 +53,7 @@ Runs in parallel with Wave 0. E-01, E-02, E-03, E-04, E-05, E-06, E-08, E-09, E-
 
 | Element | Waits on | Interim strategy | Removal plan |
 |---|---|---|---|
-| E-10, E-14 | NEW-01 | **Local adapter** — `apps/team/src/EmailTokenField.tsx`, written to NEW-01's proposed API exactly, so the swap is a one-line import change | plans/006 step 6 deletes it |
+| E-10, E-14 | NEW-01 | **Local adapter** — `apps/team/src/EmailTokenField.tsx`, written to NEW-01's proposed API exactly, so the swap is a one-line import change | The build plan that follows plans/006's RFC — its final step deletes the adapter |
 | E-11 | EXT-01 | **Wait** — one day of DS work; a local dismissible tag would be a duplicate of a component that is about to exist | n/a |
 | E-15 | NEW-02 | **Wait** — v1 ships partial-failure detail in the existing `Toast variant="danger"`; the persistent summary lands with NEW-02 | n/a |
 
