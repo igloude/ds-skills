@@ -65,6 +65,16 @@ category greps them. Deprecated rows always name the replacement.
 |---|---|---|---|---|---|
 | W-001 | apps/marketing/** | token.* | Brand campaign styles are intentionally off-system | @igloude | 2026-12-31 |
 
+## Exclusions
+
+| Scope (glob) | Reason |
+|---|---|
+| apps/*/emails/** | Inline styles are load-bearing in email clients |
+
+Excluded paths are not audited at all — unlike waivers, whose findings are
+still detected and listed. Every review names the exclusions it matched under
+"Not audited", so the skips stay visible.
+
 ## Notes for generators
 
 The ≤40-line digest a generating agent should carry in context: the inventory
@@ -104,6 +114,7 @@ What ds-drift is entitled to rely on (and therefore what regeneration must never
 2. **Staleness**: the header's `Package` stamp vs. the installed version. Mismatch → `manifest.stale` finding + degraded-confidence note; never silent.
 3. **Stable zone semantics**: inventory table columns, severity-map shape, waiver-table shape as above. Additive changes are fine; renames are breaking and require a version note in the header.
 4. Waiver matching is `glob × class`; expired waivers are dead (and reconcile flags them).
+5. Exclusion matching is `glob` only: matched paths are skipped entirely and listed under "Not audited".
 
 ## Update discipline
 

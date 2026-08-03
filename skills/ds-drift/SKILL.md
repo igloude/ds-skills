@@ -28,7 +28,7 @@ The economics: generation is cheap now, so the volume of work to police is large
 
 ### Phase 1 — Recon (always)
 
-**Manifest first.** The conformance manifest is both the rulebook and your recon cache. Locate it in this order: a `--manifest <path>` argument → `ds/MANIFEST.md` + `ds/tokens.json` in the repo root → `node_modules/<ds-package>/ds/` (design systems that publish their manifest). Read the severity policy, waiver ledger, component inventory, and synonym map from it.
+**Manifest first.** The conformance manifest is both the rulebook and your recon cache. Locate it in this order: a `--manifest <path>` argument → `ds/MANIFEST.md` + `ds/tokens.json` in the repo root → `node_modules/<ds-package>/ds/` (design systems that publish their manifest). Read the severity policy, waiver ledger, exclusions table, component inventory, and synonym map from it — excluded paths are skipped entirely and listed under the review's "Not audited" line.
 
 - **Stamp check**: the manifest records the DS package version it was generated against. Compare with the installed version. On mismatch, record `manifest.stale` in the review header with a degraded-confidence note — it is a scope-level condition, not a verdict-counted finding (the staleness is not the branch's doing) — and do not silently proceed as if current.
 - **No manifest**: derive a working inventory and token map from the DS package source or published types, say so in the report, and recommend running `/ds-doctor` — the gate's precision is bounded by the rulebook's quality.

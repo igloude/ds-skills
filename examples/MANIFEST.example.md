@@ -57,6 +57,12 @@
 |---|---|---|---|---|---|
 | W-001 | apps/marketing/** | token.* | Campaign styles intentionally off-system | @igloude | 2026-12-31 |
 
+## Exclusions
+
+| Scope (glob) | Reason |
+|---|---|
+| apps/*/emails/** | Inline styles are load-bearing in email clients |
+
 ## Notes for generators
 
 Read this section before writing any UI in a consuming repo.
