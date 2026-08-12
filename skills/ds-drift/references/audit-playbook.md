@@ -28,7 +28,7 @@ Vet requirement before any adoption finding: open the DS component's types and m
 
 **Scope**: this category audits *color*. Spacing, typography, radius, shadow, and z-index drift are not audited by this skill — state that in the review's "Not audited" line rather than letting a PASS imply full token conformance.
 
-Run the mechanical classification first: dedupe literals, run `scripts/nearest_token.mjs`, and let the exact/near/none/unparsed classes be the evidence.
+Run the mechanical classification first: dedupe the literals, pipe them into `scripts/nearest_token.mjs` (read-only, writes nothing — see the invocation in SKILL.md Phase 2), and let the exact/near/none/unparsed classes be the evidence. Check the script's stderr for skipped tokens before reporting anything as `none`.
 
 - Literals: `#hex`, `rgb()/rgba()`, `hsl()/hsla()`, `oklch()`, `color-mix()`. (`transparent`, `currentColor`, `inherit` are semantics, not colors — skip.)
 - Tailwind arbitrary values: `-[#...]`, `-[rgb(...)]`.

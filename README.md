@@ -50,6 +50,17 @@ Or as a Claude Code plugin:
 /plugin install ds-skills@igloude
 ```
 
+## What actually runs on your machine
+
+These skills are almost entirely markdown — instructions an agent reads, not programs. The exceptions are worth stating precisely, because a skill that audits your code should be auditable itself:
+
+- **One executable ships in this repo**: [`skills/ds-drift/scripts/nearest_token.mjs`](skills/ds-drift/scripts/nearest_token.mjs) (~310 lines, no dependencies, Node 18+). It reads a token map and a list of color literals, prints JSON to stdout, and writes nothing — no network, no disk writes, and it never imports or evaluates code from the repo it's pointed at. The first 40 lines are a header stating exactly that, and the rest is color math you can read in a sitting before approving it.
+- **Everything else the skills run is read-only inspection** of your own repo: `git`, `rg`/`grep`, and whatever typecheck/lint/test commands your repo already defines, in check mode. No installs, no formatters, no commits, no writes to your working tree.
+- **Two kinds of writes, both narrow**: markdown into `plans/`, and — ds-doctor only — the `ds/MANIFEST.md` + `ds/tokens.json` pair. Nothing else is ever modified.
+- **One action leaves your machine**, and only behind the explicit `--issues` flag: `gh issue create`. It runs an auth and target-repo preflight, shows you every title first, and asks before publishing from a public repo. Without the flag, no issue is ever created.
+
+If a command a skill proposes doesn't match this description, that's a bug — it's meant to be safe to approve without reading the transcript twice.
+
 ## Usage
 
 Coverage maps, reviews, plans, and the manifest are plain markdown — any agent or human can pick them up. The only runtime dependency is Node 18+ for the token classifier script; everything else is markdown.

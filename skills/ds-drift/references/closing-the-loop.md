@@ -34,13 +34,30 @@ Finish with a short report: verified, refreshed, retired, rejected, and what's a
 
 ## `--issues` — publish where work gets picked up
 
-The flag is the user's authorization — never create issues without it.
+The flag is the user's authorization — never create issues without it. This is the only step in the skill that sends anything off the machine, and issues are hard to unpublish: an issue is visible the moment it is created, and deleting one later does not un-notify the watchers, un-index it, or clear it from anyone's inbox. Run the sequence in order and do not compress it.
 
-1. Preflight: `gh auth status` succeeds and the repo has a GitHub remote; otherwise write files as normal and say why issues were skipped.
-2. Visibility: `gh repo view --json visibility`. If **public**, warn that issues are publicly visible and get explicit confirmation before publishing anything describing internal architecture or a security-adjacent finding.
-3. Show the list of titles about to become issues; confirm once if interactive.
-4. Per plan: `gh issue create --title "<plan title>" --body-file <plan file>`. Per review (gate mode): one issue per **blocking** finding, body = the finding plus its remediation spec, so each is independently assignable. Labels: `ds-drift` plus the class — apply only if labels exist or can be created without erroring; skip labels rather than fail.
-5. Record each URL in the plan's Status block or the review's finding, and in the index.
+1. **Preflight, read-only.** Confirm both, and if either fails, write the files as normal and say plainly why issues were skipped:
+
+   ```sh
+   gh auth status                  # authenticated, and as whom
+   gh repo view --json nameWithOwner,visibility   # the exact repo about to receive issues
+   ```
+
+   Report the account and `nameWithOwner` back to the user. Publishing to the wrong remote is the failure mode this catches, and it is silent otherwise.
+
+2. **Visibility gate.** If the repo is **public**, say so explicitly and get confirmation before publishing anything that describes internal architecture, an unpatched weakness, or a security-adjacent finding. Reviews quote source and name file paths; that is exactly the content a public issue tracker makes permanent.
+
+3. **Show the work before it leaves.** List every title about to be created, with the count and the target repo, and get an explicit go-ahead. Ask every time — never treat a prior `--issues` run, or a non-interactive session, as standing consent for this one.
+
+4. **Create, one at a time.** Per plan:
+
+   ```sh
+   gh issue create --title "<plan title>" --body-file <plan file>
+   ```
+
+   Per review (gate mode): one issue per **blocking** finding, body = the finding plus its remediation spec, so each is independently assignable. Use `--body-file` rather than an inline `--body` — the file is what the user reviewed, and it keeps the shell out of the content. Labels: `ds-drift` plus the class, applied only if they already exist or can be created without erroring; skip labels rather than fail the publish.
+
+5. **Record each URL** in the plan's Status block or the review's finding, and in the index, so the next run knows what was already filed and doesn't duplicate it.
 
 The file remains the source of truth; the issue is distribution. Self-containment is what makes the issue body work unedited.
 

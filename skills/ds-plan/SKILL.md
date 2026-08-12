@@ -77,7 +77,7 @@ Selected items become `plans/NNN-<slug>.md` per [references/work-item-template.m
 - `quick` / `deep` → effort dial. `quick` classifies drawn elements only and says so; `deep` walks the full implied-state checklist per element and reads every candidate component's types.
 - `backlog` → skip classification: aggregate the Extension and Net-new items across every existing coverage map in `plans/`, deduplicate by component, and rank by how many features each one blocks. The DS roadmap, derived from demand.
 - `recheck <map-file>` → re-validate an existing map against the current manifest: extensions that shipped become Covered, deprecations that landed invalidate rows, stale stamps get flagged. Run after a DS release, before the feature starts.
-- `--issues` → publish selected work items as GitHub issues, labeled per the manifest's contribution path (usually `ds-request`). Same discipline as the sibling skills: the flag is the consent, `gh` preflight first, explicit confirmation before publishing anything sensitive from a public repo.
+- `--issues` → publish selected work items as GitHub issues, labeled per the manifest's contribution path (usually `ds-request`). Follow the publishing sequence in [../ds-drift/references/closing-the-loop.md](../ds-drift/references/closing-the-loop.md) verbatim — read it before creating anything. In short: the flag is the consent, `gh` preflight and target-repo confirmation first, the list of titles shown and approved before publishing, and an explicit check before anything sensitive leaves a public repo.
 - `--manifest <path>` → override manifest discovery.
 
 ## Tone of the output
