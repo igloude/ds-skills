@@ -1,33 +1,90 @@
 #!/usr/bin/env node
+//
 // nearest_token.mjs — map color literals to the nearest design token by CIE76 ΔE.
 //
-// Usage:
-//   node nearest_token.mjs tokens.json literals.txt [--threshold 10]
+// WHAT IT DOES
+//   Reads a token map and a list of color literals, converts both to CIE Lab, and
+//   reports for each literal the closest token and the perceptual distance to it.
+//   That distance is the evidence behind every token finding: "exact" is safe to
+//   codemod, "near" needs a human eye, "none" is a real design decision.
 //
-//   tokens.json   { "token-name": "#0f62fe" | "rgb(...)" | "hsl(...)", ... }
-//   literals.txt  one color literal per line (duplicates fine; output is deduped)
+// WHAT IT DOES NOT DO
+//   No network access. No writes of any kind — not to your repo, not to disk, not
+//   anywhere; the only output is JSON on stdout and diagnostics on stderr. It does
+//   not import, execute, or evaluate anything from the repo it is pointed at: both
+//   inputs are read as plain text. Nothing it reads can influence what it does.
+//   It is safe to run against any checkout, and safe to re-run.
 //
-// Output: JSON array of { literal, class: "exact"|"near"|"none"|"unparsed",
-//                         token, deltaE, alphaMismatch }
+// USAGE
+//   node nearest_token.mjs <tokens.json> <literals.txt> [--threshold <ΔE>]
+//   node nearest_token.mjs <tokens.json> -              [--threshold <ΔE>]
+//
+//   tokens.json   A flat JSON object of resolved color literals, as ds-doctor
+//                 generates it: { "color-text": "#161616", "color-text@dark": "…" }
+//   literals.txt  One color literal per line. Pass "-" to read them from stdin
+//                 instead, so no scratch file is written into the audited repo.
+//                 Duplicates are fine — the output is deduplicated.
+//   --threshold   The ΔE at or below which a literal counts as "near". Default 10.
+//
+// OUTPUT — stdout, a JSON array of { literal, class, token, deltaE, alphaMismatch }
+//   "exact"     ΔE < 0.01 and alpha matches — mechanical, codemod-ready
+//   "near"      ΔE <= threshold — probably drift, confirm by eye before changing
+//   "none"      ΔE > threshold — no token is close; a design decision, never a codemod
+//   "unparsed"  the color format is not supported here (oklch, color-mix) —
+//               resolve it by hand; do not read it as "none"
+//
+// OUTPUT — stderr, a run summary plus any token the script had to skip. A skipped
+//   token is one that literals cannot match against, which would turn a genuine
+//   exact match into a "none", so skips are always reported rather than swallowed.
+//
+// EXIT CODES  0 on success · 1 on bad arguments or unreadable input.
 
 import { readFileSync } from "node:fs";
 
-const [tokensPath, literalsPath, ...rest] = process.argv.slice(2);
-if (!tokensPath || !literalsPath) {
-  console.error("usage: node nearest_token.mjs tokens.json literals.txt [--threshold 10]");
+const USAGE = "usage: node nearest_token.mjs <tokens.json> <literals.txt|-> [--threshold <ΔE>]";
+
+function fail(message) {
+  console.error(`nearest_token: ${message}`);
+  console.error(USAGE);
   process.exit(1);
 }
-const tIdx = rest.indexOf("--threshold");
-let THRESHOLD = 10;
-if (tIdx !== -1) {
-  THRESHOLD = parseFloat(rest[tIdx + 1]);
-  if (!Number.isFinite(THRESHOLD) || THRESHOLD < 0) {
-    console.error("invalid --threshold value: " + rest[tIdx + 1]);
-    process.exit(1);
+
+const sample = (names, limit = 5) =>
+  names.slice(0, limit).join(", ") + (names.length > limit ? `, …and ${names.length - limit} more` : "");
+
+// ---- arguments -------------------------------------------------------------
+// Parsed strictly. An unrecognized or malformed flag exits rather than falling
+// back to a default: a silently-ignored --threshold changes the class of every
+// literal in the output without changing anything about how the run looks.
+
+function parseArgs(argv) {
+  const files = [];
+  let threshold = 10;
+
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+
+    if (arg === "--threshold") {
+      const raw = argv[++i];
+      const value = Number(raw);
+      if (raw === undefined || !Number.isFinite(value) || value < 0) {
+        fail(`--threshold needs a non-negative number, got ${JSON.stringify(raw ?? null)}`);
+      }
+      threshold = value;
+    } else if (arg.startsWith("-") && arg !== "-") {
+      fail(`unknown option ${arg}`);
+    } else {
+      files.push(arg);
+    }
   }
+
+  if (files.length !== 2) fail(`expected 2 file arguments, got ${files.length}`);
+  return { tokensPath: files[0], literalsPath: files[1], threshold };
 }
 
-// ---- parsing ---------------------------------------------------------------
+// ---- color parsing ---------------------------------------------------------
+// Returns { r, g, b, a } with channels in 0–255 and alpha in 0–1, or null when
+// the format is not supported. Null is reported as "unparsed", never guessed at.
 
 // CSS named colors. `transparent` / `currentcolor` / `inherit` are deliberately
 // absent — they are semantics, not colors, and should not be collected.
@@ -76,51 +133,65 @@ function parseColor(raw) {
   let s = raw.trim().toLowerCase();
   if (NAMED[s]) s = NAMED[s];
 
+  // #rgb, #rgba, #rrggbb, #rrggbbaa
   let m = s.match(/^#([0-9a-f]{3,8})$/);
   if (m) {
-    let h = m[1];
-    if (h.length === 3 || h.length === 4) h = [...h].map((c) => c + c).join("");
-    if (h.length !== 6 && h.length !== 8) return null;
-    const n = parseInt(h, 16);
-    return h.length === 8
+    let hex = m[1];
+    if (hex.length === 3 || hex.length === 4) hex = [...hex].map((c) => c + c).join("");
+    if (hex.length !== 6 && hex.length !== 8) return null;
+    const n = parseInt(hex, 16);
+    return hex.length === 8
       ? { r: (n >>> 24) & 255, g: (n >>> 16) & 255, b: (n >>> 8) & 255, a: (n & 255) / 255 }
       : { r: (n >>> 16) & 255, g: (n >>> 8) & 255, b: n & 255, a: 1 };
   }
 
+  // rgb()/rgba(), comma- or space-separated, channels as numbers or percentages
   m = s.match(/^rgba?\(\s*([\d.]+%?)\s*[, ]\s*([\d.]+%?)\s*[, ]\s*([\d.]+%?)\s*(?:[,/]\s*([\d.]+%?)\s*)?\)$/);
   if (m) {
-    const ch = (v) => (v.endsWith("%") ? (parseFloat(v) / 100) * 255 : parseFloat(v));
-    const a = m[4] == null ? 1 : m[4].endsWith("%") ? parseFloat(m[4]) / 100 : parseFloat(m[4]);
-    return { r: ch(m[1]), g: ch(m[2]), b: ch(m[3]), a };
+    const channel = (v) => (v.endsWith("%") ? (parseFloat(v) / 100) * 255 : parseFloat(v));
+    return { r: channel(m[1]), g: channel(m[2]), b: channel(m[3]), a: parseAlpha(m[4]) };
   }
 
+  // hsl()/hsla() — converted to sRGB via the standard hue-to-channel function.
+  // Negative hues are legal CSS; normalize into [0, 360) before converting.
   m = s.match(/^hsla?\(\s*(-?[\d.]+)(?:deg)?\s*[, ]\s*([\d.]+)%\s*[, ]\s*([\d.]+)%\s*(?:[,/]\s*([\d.]+%?)\s*)?\)$/);
   if (m) {
-    const h = (((parseFloat(m[1]) % 360) + 360) % 360) / 360, sl = parseFloat(m[2]) / 100, l = parseFloat(m[3]) / 100;
-    const a = m[4] == null ? 1 : m[4].endsWith("%") ? parseFloat(m[4]) / 100 : parseFloat(m[4]);
-    const f = (n) => {
-      const k = (n + h * 12) % 12;
-      const c = sl * Math.min(l, 1 - l);
-      return l - c * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+    const hue = (((parseFloat(m[1]) % 360) + 360) % 360) / 360;
+    const saturation = parseFloat(m[2]) / 100;
+    const lightness = parseFloat(m[3]) / 100;
+    const channel = (n) => {
+      const k = (n + hue * 12) % 12;
+      const chroma = saturation * Math.min(lightness, 1 - lightness);
+      return lightness - chroma * Math.max(-1, Math.min(k - 3, 9 - k, 1));
     };
-    return { r: f(0) * 255, g: f(8) * 255, b: f(4) * 255, a };
+    return {
+      r: channel(0) * 255,
+      g: channel(8) * 255,
+      b: channel(4) * 255,
+      a: parseAlpha(m[4]),
+    };
   }
 
-  return null; // oklch, color-mix: report as unparsed, resolve manually
+  return null; // oklch, color-mix: reported as unparsed, resolved by hand
 }
+
+const parseAlpha = (raw) =>
+  raw == null ? 1 : raw.endsWith("%") ? parseFloat(raw) / 100 : parseFloat(raw);
 
 // ---- sRGB → Lab → ΔE76 -----------------------------------------------------
 
 function toLab({ r, g, b }) {
-  const lin = (c) => {
+  const linearize = (c) => {
     c /= 255;
     return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
   };
-  const [R, G, B] = [lin(r), lin(g), lin(b)];
-  // D65 reference white
+  const [R, G, B] = [linearize(r), linearize(g), linearize(b)];
+
+  // CIE XYZ, normalized against the D65 reference white
   const x = (0.4124564 * R + 0.3575761 * G + 0.1804375 * B) / 0.95047;
   const y = 0.2126729 * R + 0.7151522 * G + 0.072175 * B;
   const z = (0.0193339 * R + 0.119192 * G + 0.9503041 * B) / 1.08883;
+
   const f = (t) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
   const [fx, fy, fz] = [f(x), f(y), f(z)];
   return { L: 116 * fy - 16, a: 500 * (fx - fy), b: 200 * (fy - fz) };
@@ -128,38 +199,115 @@ function toLab({ r, g, b }) {
 
 const deltaE = (p, q) => Math.hypot(p.L - q.L, p.a - q.a, p.b - q.b);
 
-// ---- run -------------------------------------------------------------------
+// ---- inputs ----------------------------------------------------------------
 
-const tokens = JSON.parse(readFileSync(tokensPath, "utf8"));
-const tokenLab = Object.entries(tokens)
-  .map(([name, value]) => {
-    const c = parseColor(String(value));
-    return c ? { name, value, lab: toLab(c), alpha: c.a } : null;
-  })
-  .filter(Boolean);
+function readTokens(path) {
+  let raw;
+  try {
+    raw = JSON.parse(readFileSync(path, "utf8"));
+  } catch (err) {
+    fail(`could not read ${path} as JSON — ${err.message}`);
+  }
+  if (raw === null || typeof raw !== "object" || Array.isArray(raw)) {
+    fail(`${path} must be a JSON object mapping token name → color literal`);
+  }
 
-if (tokenLab.length === 0) {
-  console.error("no parseable tokens in " + tokensPath);
-  process.exit(1);
+  const usable = [];
+  const nonString = []; // nested token files — the shape is wrong, not the color
+  const unsupported = []; // strings in a format parseColor cannot read
+
+  for (const [name, value] of Object.entries(raw)) {
+    if (typeof value !== "string") {
+      nonString.push(name);
+      continue;
+    }
+    const color = parseColor(value);
+    if (!color) {
+      unsupported.push(name);
+      continue;
+    }
+    usable.push({ name, lab: toLab(color), alpha: color.a });
+  }
+
+  return { usable, nonString, unsupported };
 }
 
-const literals = [...new Set(
-  readFileSync(literalsPath, "utf8").split("\n").map((l) => l.trim().toLowerCase()).filter(Boolean)
-)];
-
-const results = literals.map((literal) => {
-  const c = parseColor(literal);
-  if (!c) return { literal, class: "unparsed", token: null, deltaE: null, alphaMismatch: null };
-
-  const lab = toLab(c);
-  let best = null;
-  for (const t of tokenLab) {
-    const d = deltaE(lab, t.lab);
-    if (!best || d < best.deltaE) best = { token: t.name, deltaE: d, tokenAlpha: t.alpha };
+function readLiterals(path) {
+  const source = path === "-" ? 0 : path; // file descriptor 0 is stdin
+  let text;
+  try {
+    text = readFileSync(source, "utf8");
+  } catch (err) {
+    fail(`could not read literals from ${path === "-" ? "stdin" : path} — ${err.message}`);
   }
-  const alphaMismatch = Math.abs(c.a - best.tokenAlpha) > 0.001;
-  const cls = best.deltaE < 0.01 && !alphaMismatch ? "exact" : best.deltaE <= THRESHOLD ? "near" : "none";
-  return { literal, class: cls, token: best.token, deltaE: +best.deltaE.toFixed(2), alphaMismatch };
-});
+  // Lowercase before deduplicating: #FFF and #fff are the same literal.
+  return [...new Set(text.split("\n").map((line) => line.trim().toLowerCase()).filter(Boolean))];
+}
+
+// ---- classification --------------------------------------------------------
+
+function classify(literal, tokens, threshold) {
+  const color = parseColor(literal);
+  if (!color) {
+    return { literal, class: "unparsed", token: null, deltaE: null, alphaMismatch: null };
+  }
+
+  const lab = toLab(color);
+  let best = tokens[0];
+  let bestDistance = deltaE(lab, best.lab);
+  for (let i = 1; i < tokens.length; i++) {
+    const distance = deltaE(lab, tokens[i].lab);
+    if (distance < bestDistance) {
+      best = tokens[i];
+      bestDistance = distance;
+    }
+  }
+
+  const alphaMismatch = Math.abs(color.a - best.alpha) > 0.001;
+  const cls =
+    bestDistance < 0.01 && !alphaMismatch ? "exact" : bestDistance <= threshold ? "near" : "none";
+
+  return {
+    literal,
+    class: cls,
+    token: best.name,
+    deltaE: +bestDistance.toFixed(2),
+    alphaMismatch,
+  };
+}
+
+// ---- run -------------------------------------------------------------------
+
+const { tokensPath, literalsPath, threshold } = parseArgs(process.argv.slice(2));
+const { usable: tokens, nonString, unsupported } = readTokens(tokensPath);
+
+if (tokens.length === 0) fail(`no parseable color tokens in ${tokensPath}`);
+
+// A skipped token cannot be matched against, so a literal that is really an exact
+// match comes back as "none". Warn before the results, not after them.
+if (nonString.length > 0) {
+  console.error(
+    `nearest_token: WARNING — ${nonString.length} token(s) in ${tokensPath} have non-string ` +
+      `values and were skipped: ${sample(nonString)}. This usually means the file is a nested ` +
+      `token source rather than the flat, fully resolved map this script expects. Results are ` +
+      `incomplete: do not report "none" classes from this run.`,
+  );
+}
+if (unsupported.length > 0) {
+  console.error(
+    `nearest_token: ${unsupported.length} token(s) are in an unsupported color format and were ` +
+      `skipped: ${sample(unsupported)}`,
+  );
+}
+
+const literals = readLiterals(literalsPath);
+const results = literals.map((literal) => classify(literal, tokens, threshold));
+
+const count = (cls) => results.filter((r) => r.class === cls).length;
+console.error(
+  `nearest_token: ${literals.length} unique literal(s) against ${tokens.length} token(s), ` +
+    `near-threshold ΔE ${threshold} — exact ${count("exact")}, near ${count("near")}, ` +
+    `none ${count("none")}, unparsed ${count("unparsed")}`,
+);
 
 console.log(JSON.stringify(results, null, 2));

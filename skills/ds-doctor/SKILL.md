@@ -50,7 +50,7 @@ On confirmation: write the manifest pair per [references/manifest-spec.md](refer
 - `component <name>` → audit one component's contract in depth; useful before promoting an extraction candidate.
 - `tokens` → token-layer category only.
 - `quick` / `deep` → effort dial for the audit; `deep` reads every exported component, `quick` samples the highest-traffic ones (by import count in sibling apps, if visible).
-- `--issues` → also publish selected plans as GitHub issues; same authorization, preflight, and public-repo warning discipline as ds-drift: the flag is the consent, `gh` preflight first, explicit confirmation before publishing anything sensitive from a public repo.
+- `--issues` → also publish selected plans as GitHub issues. Follow the publishing sequence in [../ds-drift/references/closing-the-loop.md](../ds-drift/references/closing-the-loop.md) verbatim — read it before creating anything. In short: the flag is the consent, `gh` preflight and target-repo confirmation first, the list of titles shown and approved before publishing, and an explicit check before anything sensitive leaves a public repo.
 
 ## Tone of the output
 

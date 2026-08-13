@@ -114,9 +114,16 @@ The right component exists; it needs a new variant or prop to cover this element
 **Blast radius is a count, not an adjective.** Establish it mechanically:
 
 ```sh
+# Which files reference the component at all — the file-level blast radius.
 rg -l "\bComponentName\b" --glob '!**/node_modules/**' --glob '!**/dist/**'
-rg -n "<ComponentName[^>]*" -o --glob '!**/node_modules/**' | head -50
+
+# Every JSX opening tag, so you can see which variants and props are actually
+# in use. Truncated to 50 matches: if you hit the cap, say so in the map rather
+# than reporting the sample as the total.
+rg -n -o "<ComponentName[^>]*" --glob '!**/node_modules/**' --glob '!**/dist/**' | head -50
 ```
+
+Both are read-only searches. If `rg` isn't installed, `grep -rn --exclude-dir=node_modules --exclude-dir=dist` gets the same answer more slowly.
 
 Read a sample of the call sites — enough to know which variants and props are actually in use — and check CODEOWNERS for who reviews the change. Then classify the delta itself, which is what actually determines risk:
 

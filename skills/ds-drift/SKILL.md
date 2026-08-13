@@ -45,7 +45,23 @@ Scope follows the mode:
 
 Audit against the categories in [references/audit-playbook.md](references/audit-playbook.md) — read it now: **adoption, tokens, usage, a11y, extraction**, each with the AI-generation failure signatures to watch for. For sweeps of any real size, fan out parallel read-only subagents per category. Subagents do not inherit this skill's context, so each prompt must include: the absolute path to the playbook plus the section headings to read (always including "Finding format"), the recon facts that scope the search, the manifest's waiver ledger and severity digest (so subagents can *annotate* findings that look waived — they still report them; matching and exclusion happen in Vet, never in a subagent), a findings-only instruction, and a verbatim copy of Hard Rules 4 and 6.
 
-For token findings, classify literals mechanically: write the deduplicated literals to a file and run `node <skill-dir>/scripts/nearest_token.mjs <tokens.json> <literals.txt>` — the script ships with **this skill**, not the audited repo, so resolve `<skill-dir>` to this skill's install directory (requires Node 18+). It returns exact / near / none / unparsed with ΔE distances. The classes are the evidence; don't eyeball color distance, and never drop `unparsed` rows — they resolve manually.
+For token findings, classify literals mechanically — don't eyeball color distance. Pipe the deduplicated literals into this skill's `scripts/nearest_token.mjs` (requires Node 18+), which reads its two inputs, writes nothing anywhere, and prints exact / near / none / unparsed with ΔE distances as JSON on stdout:
+
+```sh
+# Reads the token map and the literals below. Writes nothing; prints JSON to stdout.
+node <this-skill-dir>/scripts/nearest_token.mjs ds/tokens.json - <<'LITERALS'
+#64748b
+rgb(15, 98, 254)
+LITERALS
+```
+
+Three things make this trustworthy, and all three are your responsibility:
+
+- **Use the absolute path to this skill's `scripts/` directory**, not a relative one — the audited repo's cwd has no such file, and a guessed path in a permission prompt reads as a script the user can't place.
+- **Use the `-` (stdin) form.** It keeps the literals visible in the command the user approves, and it means no scratch file is written into the repo under audit — Hard Rule 2. If the list is too long to inline, write the scratch file under the OS temp dir and say so; never into the working tree.
+- **Read the stderr summary before you use the results.** It reports the token count, the threshold in effect, and any token the script had to skip. A skipped token cannot be matched against, which silently turns a real exact match into a `none` — if the script warns, the token file is wrong and no `none` from that run is reportable.
+
+The classes are the evidence. Never drop `unparsed` rows — they resolve manually.
 
 ### Phase 3 — Vet
 
