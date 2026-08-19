@@ -1,7 +1,7 @@
 {
   "name": "ds-skills",
   "description": "Police large volumes of AI-generated frontend work for design-system conformance, and audit the design system itself so it can be policed. Report-only: verdicts, reviews, plans, and issues — it never edits your code.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": {
     "name": "Ian Gloude",
     "url": "https://github.com/igloude"
