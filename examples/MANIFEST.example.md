@@ -8,7 +8,7 @@
 - **Manifest schema**: 2
 - **Package**: @acme/ui@4.2.0
 - **API hash**: sha256:9f2c41d8a7e0b3f6c5d21e8a90b4c7f3d6e1a852b90c4d7e3f6a1b852c90d4e7
-- **Generated**: 2026-07-23, commit `f7a19d2`, by ds-doctor v0.4.0
+- **Generated**: 2026-07-23, commit `f7a19d2`, by ds-doctor v0.5.0
 - **Token source**: packages/ui/src/tokens/*.css → ds/tokens.json (62 tokens, themes: light, dark)
 <!-- /generated -->
 
