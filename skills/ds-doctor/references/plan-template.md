@@ -1,98 +1,36 @@
 # Doc-Fix Plan Template
 
-A deliberately slimmer sibling of ds-drift's plan template, duplicated here rather than shared: skills are self-contained at their boundaries, the same way plans are (a reference this skill can't see in another skill's folder is a broken reference). The three properties are identical — self-contained context, verification gates, hard boundaries with STOP conditions — trimmed to documentation work, which is lower-risk and ideal for the cheapest executors.
+A delta on the family's one executor-plan skeleton, [../../ds-drift/references/plan-template.md](../../ds-drift/references/plan-template.md) — **read that file first**; everything not named below (executor instructions, drift check, Why this matters, Current state, Commands, Scope, Steps with per-step Verify, Done criteria, STOP conditions, Maintenance notes, the quality bar) applies as written there. Documentation work is lower-risk and ideal for the cheapest executors; these plans should read that way.
 
-File naming: `plans/NNN-<slug>.md`, sharing the numbering and index with any existing `plans/` content (including ds-drift's reviews — one directory, one sequence). Parallel branches can race the sequence: number from the highest NNN visible across the default branch *and* your own branch; if a merge still collides, the later-merged file renumbers and its index row moves with it.
+File naming and the shared index follow [conventions.md](../../ds-drift/references/conventions.md).
 
----
+## Deltas
 
-## Template
+**Status block** — replace `Category` and `Class` with:
 
 ```markdown
-# Plan NNN: <Imperative title — what will be documented/decided after this>
-
-> **Executor instructions**: Follow step by step; run every verification and
-> confirm the expected result. On any STOP condition, stop and report. Update
-> this plan's row in `plans/README.md` when done.
->
-> **Drift check (run first)**: `git diff --stat <planned-at SHA>..HEAD -- <in-scope paths>`
-> On changes to in-scope files, compare "Current state" against live content
-> before proceeding; mismatch = STOP.
-
-## Status
-
-- **Priority** / **Effort** / **Risk**: P1–P3 / S–L / LOW–HIGH
 - **Category**: contracts | tokens | guidelines | machine-surface | deprecation
 - **Downstream effect**: <which conformance class this unblocks or sharpens>
-- **Planned at**: commit `<short SHA>`, <date>
-- **Issue**: <URL if published>
-
-## Why this matters
-
-2–4 sentences: the gap, who hits it (generating agents, the gate, humans),
-what becomes enforceable once closed.
-
-## Current state
-
-- The files involved, one line each; short excerpts with `file:line` markers.
-- What exists vs. what's missing, stated exactly (e.g. "variants `ghost`,
-  `inline`, `compact` are in `select.types.ts:12-18` and appear in zero docs").
-- The writing conventions to match, with one exemplar: "prop tables follow
-  `docs/components/dialog.mdx` — match its structure."
-
-## Commands you will need
-
-| Purpose | Command | Expected on success |
-|---|---|---|
-| Docs build | `pnpm build-docs` | exit 0 |
-| Stories | `pnpm build-storybook` | exit 0 |
-| Typecheck | `pnpm typecheck` | exit 0 (doc snippets compile if the repo checks them) |
-
-## Scope
-
-**In scope**: the exact doc/story/policy files (created or edited).
-**Out of scope**: component source — a doc-fix plan never changes behavior;
-if correct docs would require a code change, that is a STOP condition, not
-an invitation.
-
-## Git workflow
-
-Branch `ds-docs/NNN-<slug>` (or the repo's evident convention); commit per
-step, message style matched to `git log`. Do NOT push or open a PR unless
-instructed.
-
-## Steps
-
-### Step 1: <imperative title>
-Exact content to add or the decision to record — for policy plans, include
-the drafted policy text itself so the executor is transcribing, not deciding.
-**Verify**: `<command>` → <expected>
-
-## Done criteria
-
-- [ ] Builds above exit 0
-- [ ] The gap is closed verbatim: <a grep or check proving the content exists>
-- [ ] No source files modified (`git status` shows docs/policy paths only)
-- [ ] Index row updated
-
-## STOP conditions
-
-- Current-state excerpts don't match (drift).
-- Closing the gap correctly would require changing component behavior.
-- The needed decision isn't in this plan (policy plans must carry the decision;
-  if it's missing, the plan is incomplete — report, don't invent policy).
-
-## Maintenance notes
-
-What future DS changes must touch this doc; whether `/ds-doctor manifest`
-should be re-run after it lands (usually yes — say so explicitly).
 ```
 
----
+**Scope** — component source is always out of scope. A doc-fix plan never changes behavior; if correct docs would require a code change, that is a STOP condition, not an invitation.
 
-## Quality bar
+**Steps** — for policy plans, the step includes the **drafted policy text itself**, so the executor is transcribing a decision, never making one. A policy plan whose decision is missing is incomplete: report, don't invent policy.
 
-- Executable by a model that has never seen the DS repo, with only this file and the repo?
+**Git workflow** — branch prefix `ds-docs/NNN-<slug>` (or the repo's evident convention).
+
+**Commands** — the verification gates are the docs/stories builds (`pnpm build-docs`, `pnpm build-storybook`) and typecheck if the repo compiles doc snippets; there is no test-suite step. Verified during recon, not guessed.
+
+**Done criteria** — in addition to builds exiting 0:
+
+```markdown
+- [ ] The gap is closed verbatim: <a grep or check proving the content exists>
+- [ ] No source files modified (`git status` shows docs/policy paths only)
+```
+
+**Maintenance notes** — always state whether `/ds-doctor manifest` should be re-run after the plan lands (usually yes).
+
+## Quality bar additions
+
 - Policy plans carry the drafted decision text — the executor transcribes, never legislates.
-- Every verification is a command with an expected result.
 - Zero component-source files in scope.

@@ -5,6 +5,12 @@
 
 # Review 003: feat/billing-settings
 
+> **For the agent fixing this branch**: the remediation specs below are
+> authoritative — apply each Change exactly as written, run its Verify command,
+> and confirm the expected result. If a STOP-if condition holds, stop and report
+> rather than improvising. Fix Blocking before Should-fix; Advisory and
+> Pre-existing items are context, not your task.
+
 ## Verdict: NEEDS CHANGES
 
 2 blocking findings introduced by this branch; both have specs below.

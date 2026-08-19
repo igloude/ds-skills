@@ -19,8 +19,12 @@
 //   node nearest_token.mjs <tokens.json> <literals.txt> [--threshold <ΔE>]
 //   node nearest_token.mjs <tokens.json> -              [--threshold <ΔE>]
 //
-//   tokens.json   A flat JSON object of resolved color literals, as ds-doctor
-//                 generates it: { "color-text": "#161616", "color-text@dark": "…" }
+//   tokens.json   A flat JSON object of resolved tokens, as ds-doctor generates
+//                 it (manifest schema 2): each entry is { "value": "#161616",
+//                 "type": "color" }. Entries with a non-color type (dimension,
+//                 duration, …) are excluded from matching by design and counted
+//                 on stderr. Schema-1 files — bare string values, e.g.
+//                 { "color-text": "#161616" } — are still accepted, as colors.
 //   literals.txt  One color literal per line. Pass "-" to read them from stdin
 //                 instead, so no scratch file is written into the audited repo.
 //                 Duplicates are fine — the output is deduplicated.
@@ -209,18 +213,30 @@ function readTokens(path) {
     fail(`could not read ${path} as JSON — ${err.message}`);
   }
   if (raw === null || typeof raw !== "object" || Array.isArray(raw)) {
-    fail(`${path} must be a JSON object mapping token name → color literal`);
+    fail(`${path} must be a JSON object mapping token name → token entry`);
   }
 
   const usable = [];
-  const nonString = []; // nested token files — the shape is wrong, not the color
-  const unsupported = []; // strings in a format parseColor cannot read
+  const nonColor = []; // typed entries whose type isn't "color" — excluded by design
+  const malformed = []; // neither a string nor a { value, type } entry — the shape is wrong
+  const unsupported = []; // color values in a format parseColor cannot read
 
-  for (const [name, value] of Object.entries(raw)) {
-    if (typeof value !== "string") {
-      nonString.push(name);
+  for (const [name, entry] of Object.entries(raw)) {
+    // Schema 2: { value, type }. Schema 1: a bare string, treated as a color.
+    let value;
+    if (typeof entry === "string") {
+      value = entry;
+    } else if (entry !== null && typeof entry === "object" && typeof entry.value === "string") {
+      if (entry.type !== undefined && entry.type !== "color") {
+        nonColor.push(name);
+        continue;
+      }
+      value = entry.value;
+    } else {
+      malformed.push(name);
       continue;
     }
+
     const color = parseColor(value);
     if (!color) {
       unsupported.push(name);
@@ -229,7 +245,7 @@ function readTokens(path) {
     usable.push({ name, lab: toLab(color), alpha: color.a });
   }
 
-  return { usable, nonString, unsupported };
+  return { usable, nonColor, malformed, unsupported };
 }
 
 function readLiterals(path) {
@@ -279,18 +295,25 @@ function classify(literal, tokens, threshold) {
 // ---- run -------------------------------------------------------------------
 
 const { tokensPath, literalsPath, threshold } = parseArgs(process.argv.slice(2));
-const { usable: tokens, nonString, unsupported } = readTokens(tokensPath);
+const { usable: tokens, nonColor, malformed, unsupported } = readTokens(tokensPath);
 
 if (tokens.length === 0) fail(`no parseable color tokens in ${tokensPath}`);
 
-// A skipped token cannot be matched against, so a literal that is really an exact
-// match comes back as "none". Warn before the results, not after them.
-if (nonString.length > 0) {
+// Non-color types are excluded by design — literals here are colors, and matching
+// them against a spacing value would be nonsense. Informational, not a warning.
+if (nonColor.length > 0) {
   console.error(
-    `nearest_token: WARNING — ${nonString.length} token(s) in ${tokensPath} have non-string ` +
-      `values and were skipped: ${sample(nonString)}. This usually means the file is a nested ` +
-      `token source rather than the flat, fully resolved map this script expects. Results are ` +
-      `incomplete: do not report "none" classes from this run.`,
+    `nearest_token: ${nonColor.length} non-color token(s) excluded by type: ${sample(nonColor)}`,
+  );
+}
+// A skipped color token cannot be matched against, so a literal that is really an
+// exact match comes back as "none". Warn before the results, not after them.
+if (malformed.length > 0) {
+  console.error(
+    `nearest_token: WARNING — ${malformed.length} token(s) in ${tokensPath} are neither a ` +
+      `string nor a { value, type } entry and were skipped: ${sample(malformed)}. This usually ` +
+      `means the file is a nested token source rather than the flat, fully resolved map this ` +
+      `script expects. Results are incomplete: do not report "none" classes from this run.`,
   );
 }
 if (unsupported.length > 0) {

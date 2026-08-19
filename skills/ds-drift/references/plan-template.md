@@ -1,14 +1,16 @@
 # Plan Template
 
-Sweep-mode findings the user selects become plans. Every plan is written for an executor with **zero context** — it has not seen the advisor session, the audit, or any other plan, and it may be a much smaller model. Assume it follows explicit instructions well and recovers from ambiguity badly.
+Sweep-mode findings the user selects become plans. Every plan must survive a **cold read** (see [conventions.md](conventions.md)) by its executor, which may be a much smaller model: it has not seen the advisor session, the audit, or any other plan. Assume it follows explicit instructions well and recovers from ambiguity badly.
+
+**This skeleton is the family's one executor-plan shape.** ds-doctor's doc-fix plans and ds-plan's DS work items are deltas on it — their template files state only what differs.
 
 Three properties make a plan executable by a weaker model:
 
-1. **Self-contained context** — paths, current-state excerpts, conventions with an exemplar file, verified commands. All of it in the file.
+1. **Cold-read context** — paths, current-state excerpts, conventions with an exemplar file, verified commands. All of it in the file.
 2. **Verification gates** — every step ends with a command and its expected result; done criteria are machine-checkable.
 3. **Hard boundaries and escape hatches** — explicit out-of-scope files, and STOP conditions instead of improvisation when reality doesn't match.
 
-File naming: `plans/NNN-<slug>.md`. Plans share `plans/`, its numbering sequence, and its index with review files; number new plans in recommended execution order.
+File naming: `plans/NNN-<slug>.md`, numbered in recommended execution order; numbering, collision handling, and the shared index follow conventions.md.
 
 ---
 
@@ -174,8 +176,9 @@ Status: TODO | IN PROGRESS | DONE | BLOCKED (reason) | REJECTED (rationale)
 
 ## Quality bar — check before finishing each plan
 
-- Could a model that has never seen this repo execute this with only the plan
-  file and the repo? Inline anything that fails that test.
+- Does the plan survive a cold read — could a model that has never seen this
+  repo execute it with only the plan file and the repo? Inline anything that
+  fails that test.
 - Every verification a command with expected output, not a judgment.
 - Every step names exact files and symbols.
 - STOP conditions specific to this plan's real risks, not boilerplate.

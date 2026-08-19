@@ -1,8 +1,8 @@
 # Coverage Map Template
 
-The coverage map is the skill's primary artifact and it has three readers who never share a session: a **generating agent** building the feature (it needs props it can transcribe), an **engineer or PM** sequencing the work (they need the waves), and a **DS maintainer** triaging what the feature exposed (they need the work items). Write for all three; each gets its own section rather than a compromise between them.
+The coverage map is the skill's primary artifact and it has three readers, each of whom gets it as a cold read: a **generating agent** building the feature (it needs props it can transcribe), an **engineer or PM** sequencing the work (they need the waves), and a **DS maintainer** triaging what the feature exposed (they need the work items). Write for all three; each gets its own section rather than a compromise between them.
 
-File naming: `plans/NNN-map-<slug>.md`. Coverage maps share `plans/`, its numbering sequence, and its index with reviews and plans; the `-map-` slug distinguishes them at a glance. Parallel branches can race the sequence: number from the highest NNN visible across the default branch *and* your own branch; if a merge still collides, the later-merged file renumbers and its index row moves with it.
+File naming: `plans/NNN-map-<slug>.md`; numbering, collision handling, and the shared index follow [conventions.md](../../ds-drift/references/conventions.md).
 
 ---
 
@@ -147,7 +147,7 @@ The corrections log is small and worth keeping honestly: it is the only feedback
 
 ## Quality bar — check before finishing a map
 
-- Could a generating agent build the whole feature from this file plus the repo, without inventing a component or guessing a prop?
+- Does the map survive a cold read — could a generating agent build the whole feature from this file plus the repo, without inventing a component or guessing a prop?
 - Does every element in the Phase A inventory appear exactly once? Count them.
 - Does every Covered and Composable row cite `file:line` for a type it actually names?
 - Is every Extension's blast radius a count with paths, not an adjective?

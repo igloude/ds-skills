@@ -1,65 +1,49 @@
 # DS Work-Item Template
 
-Extension and Net-new items the user promotes become standalone plans. This template is a sibling of ds-drift's plan template, duplicated here rather than shared — skills are self-contained at their boundaries, and a reference into another skill's folder is a broken reference.
+Extension and Net-new items the user promotes become standalone plans. This is a delta on the family's one executor-plan skeleton, [../../ds-drift/references/plan-template.md](../../ds-drift/references/plan-template.md) — **read that file first**; everything not named below applies as written there. File naming and the shared index follow [conventions.md](../../ds-drift/references/conventions.md); number in build order, Wave 0 items first.
 
-The executor is a DS maintainer or a cheaper model working in the **design system repo**, with zero context: it has not seen the feature, the design, or the coverage map. It knows the DS well and the consuming app not at all — so inline the demand-side evidence, and never assume the reader agrees the change is needed.
+The executor is a DS maintainer or a cheaper model working in the **design system repo**. The plan must survive a cold read by a reader who knows the DS well and the consuming app not at all — so inline the demand-side evidence, and never assume the reader agrees the change is needed.
 
-Two shapes below. **Extension** items change an existing component and their risk is entirely in the blast radius. **Net-new** items are design/spike RFCs — the deliverable is a reviewed contract, not a shipped component; building it is a later, separate plan. Do not merge the two shapes: an extension that quietly becomes a rewrite has lost its blast-radius argument.
+Two shapes. **Extension** (Shape A) changes an existing component; its risk is entirely in the blast radius. **Net-new** (Shape B) is a design/spike RFC — the deliverable is a reviewed contract, not a shipped component; building it is a later, separate plan. Do not merge the shapes: an extension that quietly becomes a rewrite has lost its blast-radius argument.
 
-File naming: `plans/NNN-<slug>.md`, sharing the numbering and index with coverage maps, reviews, and plans. Number in build order — Wave 0 items first.
+## Cross-repo deltas (both shapes)
+
+These plans are written from the *consuming app repo* and executed in the *DS repo*, which changes two skeleton sections:
+
+**Drift check** — app-repo commit SHAs are not valid refs in the DS repo. Replace the skeleton's `git diff` drift check with:
+
+```markdown
+> **Drift check (run first)**: this plan was written from the consuming app
+> repo — its commit SHAs are not valid here. Instead, compare every "Current
+> state" excerpt below against this repo's live code at its cited `file:line`;
+> on any mismatch, STOP.
+```
+
+**Executor instructions / status updates** — the plan's index lives in the requesting app repo, not the DS repo. The executor reports completion back to the requester instead of updating `plans/README.md`.
+
+**Status block** — adds, alongside the skeleton's fields:
+
+```markdown
+- **Class**: `ds.extension.variant` | `ds.extension.prop` | `ds.net-new.primitive` | `ds.net-new.composite`
+- **Delta class** (Shape A): additive | behavior-changing
+- **Repo**: design system
+- **Requested by**: <feature name>, elements <ids> — coverage map `plans/NNN-map-<slug>.md`
+  in the requesting app repo (not readable from this repo; demand evidence is inlined below)
+- **Planned at**: <YYYY-MM-DD>, against `@scope/ds@<installed version>` (app-repo commit
+  `<short SHA>` — informational only; not a valid ref in this repo)
+```
 
 ---
 
 ## Shape A — Extension
 
-```markdown
-# Plan NNN: <Imperative title — "Add tone=critical to Banner">
+The skeleton applies, plus:
 
-> **Executor instructions**: Follow this plan step by step. Run every
-> verification command and confirm the expected result before moving on. If any
-> STOP condition occurs, stop and report — do not improvise. When done, report
-> completion back to the requester (this plan's index lives in the requesting
-> app repo, not here).
->
-> **Drift check (run first)**: this plan was written from the *consuming app
-> repo* — its commit SHAs are not valid in this repo. Instead, compare every
-> "Current state" excerpt below against this repo's live code at its cited
-> `file:line`; on any mismatch, STOP.
+**Why this matters** — which feature needs it, what that feature does without it (the honest answer is usually "hand-rolls a variant, which the gate then blocks"), and the second use case that makes this general rather than bespoke. If the second use case is hypothetical, say so — a maintainer is entitled to decline.
 
-## Status
+**Current state** — from your own reads: the component's prop types excerpted with `file:line`; how the existing variants are implemented (a map object, a cva config, a switch — the executor matches the existing mechanism, never introduces a second one); the tokens neighboring variants use, quoted from `ds/tokens.json`; existing stories, tests, and the docs page with the exemplar to match.
 
-- **Priority**: P1 (blocks app work) | P2 | P3
-- **Effort**: S | M | L   ·   **Risk**: LOW | MED | HIGH
-- **Class**: `ds.extension.variant` | `ds.extension.prop`
-- **Delta class**: additive | behavior-changing
-- **Repo**: design system
-- **Requested by**: <feature name>, elements <ids> — coverage map `plans/NNN-map-<slug>.md`
-  in the requesting app repo (not readable from this repo; the demand evidence is inlined below)
-- **Depends on**: plans/NNN-*.md (or "none")
-- **Planned at**: <YYYY-MM-DD>, against `@scope/ds@<installed version>` (app-repo commit
-  `<short SHA>` — informational only; not a valid ref in this repo)
-- **Issue**: <URL — only when published via --issues>
-
-## Why this matters
-
-2–5 sentences: which feature needs it, what that feature does without it (the
-honest answer is usually "hand-rolls a variant, which the gate then blocks"),
-and the second use case that makes this general rather than bespoke. If the
-second use case is hypothetical, say so — a maintainer is entitled to decline.
-
-## Current state
-
-From your own reads, never a subagent's report:
-
-- The component's file, its prop types excerpted with `file:line`.
-- The existing variants and how they are implemented (a map object, a cva
-  config, a switch — the executor must match the existing mechanism, not
-  introduce a second one).
-- The tokens the neighboring variants use, quoted from `ds/tokens.json`.
-- The stories and tests that already exist for it, with paths.
-- The docs page that will need the new row, with the exemplar to match.
-
-## The delta
+**The delta** — its own section:
 
 ```diff
   type BannerProps = {
@@ -69,87 +53,26 @@ From your own reads, never a subagent's report:
   }
 ```
 
-- **Default behavior**: unchanged for every existing call site — state this
-  explicitly, or state exactly what changes and for whom.
-- **Tokens it consumes**: named semantic tokens only. If the treatment needs a
-  token that does not exist, that is a blocking dependency, not a literal —
-  STOP and route it to `/ds-doctor`.
+- **Default behavior**: unchanged for every existing call site — state this explicitly, or state exactly what changes and for whom.
+- **Tokens it consumes**: named semantic tokens only. A treatment needing a token that does not exist is a blocking dependency, not a literal — STOP and route it to `/ds-doctor`.
 
-## Blast radius
+**Blast radius** — its own section: N call sites across M packages (paths, or the ripgrep command and its count at planning time); variants currently in use; owners from CODEOWNERS; for behavior-changing deltas, the specific call sites whose rendering changes and the migration note the changelog needs.
 
-- N call sites across M packages: <paths, or the ripgrep command that finds them
-  and its count at planning time>.
-- Variants currently in use: <list>.
-- Owners to review: <from CODEOWNERS>.
-- **Behavior-changing only**: the specific call sites whose rendering changes,
-  and the migration note the changelog needs.
+**Scope** — in: the component, its types, stories, tests, and docs page, listed explicitly. Out: every consuming app (this plan does not migrate call sites) and sibling components (a tone system across five components is a different plan — if this one implies that, say so in Maintenance notes and stop).
 
-## Commands you will need
+**Steps** — ordered so the package compiles between steps: types, implementation, stories, tests, docs.
 
-| Purpose | Command | Expected on success |
-|---|---|---|
-| Typecheck | `pnpm typecheck` | exit 0 |
-| Lint | `pnpm lint` | exit 0 |
-| Tests | `pnpm test -- Banner` | all pass |
-| Stories | `pnpm build-storybook` | exit 0 |
-| Visual regression | `<only if the repo has it>` | no unexpected diffs |
+**Test plan** — the new variant's rendering test, a token assertion if the repo tests tokens, and — behavior-changing only — a regression test proving existing usage is unaffected.
 
-(Verified during recon, not guessed.)
+**Hand back to the requester** — replaces the skeleton's index-row step. On merge, the requester: re-runs `/ds-doctor manifest` in the DS repo so the inventory reflects the new API, and marks the coverage map's Wave 0 row done in the app repo's `plans/README.md`.
 
-## Scope
-
-**In scope**: the component, its types, stories, tests, and docs page — listed explicitly.
-**Out of scope**: every consuming app (this plan does not migrate call sites);
-sibling components (a tone system across five components is a different plan —
-if this one implies that, say so in Maintenance notes and stop).
-
-## Steps
-
-### Step 1: <imperative title>
-Exact files and symbols; the target code shape where it is load-bearing.
-**Verify**: `<command>` → <expected>
-
-(Order so the package compiles between steps: types, implementation, stories,
-tests, docs.)
-
-## Test plan
-
-The new variant's rendering test, a token assertion if the repo tests tokens,
-and — for behavior-changing deltas — a regression test proving existing usage is
-unaffected. Name the existing test file whose structure to match.
-
-## Done criteria
-
-- [ ] typecheck / lint / tests / stories exit 0
-- [ ] The new API appears in the docs page and the component's story set
-- [ ] No files outside the in-scope list modified (`git status`)
-
-## Hand back to the requester
-
-Not the executor's work — these live in other repos or need the skills. On merge,
-the requester:
-- re-runs `/ds-doctor manifest` in this DS repo so the inventory row reflects the new API;
-- marks the coverage map's Wave 0 row done and updates this plan's row in the
-  app repo's `plans/README.md`.
-
-## STOP conditions
-
-- Current-state excerpts don't match live code (drift).
-- The treatment requires a token that doesn't exist.
-- Implementing it cleanly requires changing shared internals other components use.
-- The delta turns out to be behavior-changing when this plan says additive.
-
-## Maintenance notes
-
-Whether sibling components now need the same API for consistency (usually yes —
-name them, do not build them), and what the next DS release note must say.
-```
+**STOP conditions** — the skeleton's, plus: the treatment requires a token that doesn't exist; implementing cleanly requires changing shared internals other components use; the delta turns out behavior-changing when this plan says additive.
 
 ---
 
 ## Shape B — Net-new (design/spike RFC)
 
-Same header, executor instructions, and status block, with `Class: ds.net-new.primitive | ds.net-new.composite`. The body differs, because the deliverable is a decision:
+Same header, cross-repo deltas, and status block. The body differs, because the deliverable is a decision:
 
 ```markdown
 ## The gap
@@ -205,11 +128,11 @@ with no removal step is a permanent duplicate.
 
 ---
 
-## Quality bar
+## Quality bar additions
 
-- Could a DS maintainer who has never seen the feature evaluate this on its merits, and could a cheaper model execute Shape A from this file plus the repo?
-- Is the demand-side evidence inlined — which elements, which feature, what happens without it?
+The skeleton's quality bar applies, plus:
+
+- Could a DS maintainer who has never seen the feature evaluate this on its merits — is the demand-side evidence inlined (which elements, which feature, what happens without it)?
 - Extension: is every claim about blast radius a number with paths behind it, and is the additive/behavior-changing call explicit and correct?
 - Net-new: is the a11y contract written, and is the API free of props no one asked for?
 - Does the plan stop where it should — no call-site migrations in an extension, no implementation in an RFC?
-- Every verification a command with expected output, not a judgment.
