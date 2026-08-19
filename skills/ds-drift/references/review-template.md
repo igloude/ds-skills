@@ -1,6 +1,6 @@
 # Review Template
 
-The review's primary reader is **the agent that generated the work** — it will be re-prompted with this file and expected to fix everything blocking. The secondary reader is a human deciding whether to merge. Both get one document: self-contained, evidence-first, with remediation specs precise enough to apply without this session.
+The review's primary reader is **the agent that generated the work** — it will be re-prompted with this file and expected to fix everything blocking. The secondary reader is a human deciding whether to merge. Both get one document that survives a cold read (see [conventions.md](conventions.md)), which is why the template opens with instructions addressed to that far-end agent — the artifact carries its own contract.
 
 Three properties make a review actionable:
 
@@ -8,7 +8,7 @@ Three properties make a review actionable:
 2. **Remediation specs, not descriptions** — every blocking finding carries current-state excerpt, exact change, and a verification command with expected output. The fixer never judges whether it succeeded.
 3. **Scope honesty** — what was audited, what wasn't, and what the toolchain already covers. A review that overclaims its coverage gets one bad merge before nobody trusts it.
 
-File naming: `plans/NNN-review-<branch-or-pr-slug>.md`. Reviews and plans share `plans/` and one monotonic numbering sequence; the `-review-` slug is what tells them apart. Parallel branches can race the sequence: number from the highest NNN visible across the default branch *and* your own branch; if a merge still collides, the later-merged file renumbers and its index row moves with it.
+File naming: `plans/NNN-review-<branch-or-pr-slug>.md`; numbering, collision handling, and the shared index follow conventions.md.
 
 ---
 
@@ -16,6 +16,12 @@ File naming: `plans/NNN-review-<branch-or-pr-slug>.md`. Reviews and plans share 
 
 ```markdown
 # Review NNN: <branch or PR ref>
+
+> **For the agent fixing this branch**: the remediation specs below are
+> authoritative — apply each Change exactly as written, run its Verify command,
+> and confirm the expected result. If a STOP-if condition holds, stop and report
+> rather than improvising. Fix Blocking before Should-fix; Advisory and
+> Pre-existing items are context, not your task.
 
 ## Verdict: NEEDS CHANGES | PASS WITH FINDINGS | PASS
 
@@ -130,7 +136,7 @@ computed against the previous row.
 
 ## Quality bar — check before finishing each review
 
-- Could the generating agent fix every blocking finding with only this file and the repo? If any remediation needs session context, inline it.
+- Does the review survive a cold read — could the generating agent fix every blocking finding with only this file and the repo? If any remediation needs session context, inline it.
 - Is every verification a command with an expected result, not "make sure it matches the DS"?
 - Does the verdict follow mechanically from the counts and the stated policy? A reader should be able to recompute it.
 - Are pre-existing findings cleanly separated from introduced ones?

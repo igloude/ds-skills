@@ -6,7 +6,7 @@ A finding is only a finding with evidence. "Uses hardcoded colors in places" is 
 
 **AI work fails in signatures, not drift.** Human codebases decay gradually; generated code fails in recognizable patterns — the model's training prior beating the repo's context. Each category below names its signatures. When you see one, check for siblings: these failures arrive in clusters, one per generation session.
 
-**The toolchain delta rule (Hard Rule 7) applies to every category**: before reporting, ask whether tsc, eslint, or an existing lint rule would catch this. If yes, it is not a finding.
+**The toolchain delta rule (Skill Rule 1) applies to every category**: before reporting, ask whether tsc, eslint, or an existing lint rule would catch this. If yes, it is not a finding.
 
 ---
 
@@ -81,12 +81,10 @@ Every finding, from every category and every subagent, comes back in this shape:
 ### [CAT-NN] Short imperative title
 
 - **Evidence**: `path/file.tsx:123` — one sentence on what's there. (2–5 strongest locations; "and ~N similar sites" if widespread.)
-- **Class**: machine key for recurrence tracking, e.g. `token.hallucinated`, `adoption.duplicate`, `usage.deprecated-prop`
+- **Class**, **Effort**, **Confidence**: the family finding fields, per conventions.md (e.g. `token.hallucinated`, `adoption.duplicate`; LOW confidence is reportable in deep sweeps only, as "investigate").
 - **Tag**: introduced | pre-existing   (gate/batch modes only)
 - **Impact**: what this costs, concretely — not "inconsistent".
 - **Severity**: blocking | should-fix | advisory — from the manifest's severity map, else the defaults below; name which.
-- **Effort**: S (hours) / M (a day-ish) / L (multi-day), including tests.
-- **Confidence**: HIGH (read it, certain) / MED (needs verification) / LOW (smell — reportable in deep sweeps only, as "investigate").
 - **Fix sketch**: 1–3 sentences. Not the spec — just enough to judge effort honestly.
 ```
 

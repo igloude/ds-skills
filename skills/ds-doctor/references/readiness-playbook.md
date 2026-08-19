@@ -38,7 +38,7 @@ The rulebook the gate enforces:
 
 Can an agent consume the DS without reading its source?
 
-- **Manifest exists and is fresh** — `ds/MANIFEST.md` + `ds/tokens.json`, stamped with the current package version, published with the package (so consuming repos get it via node_modules). Absent or stale is the first finding, and `manifest` mode is its fix.
+- **Manifest exists and is fresh** — `ds/MANIFEST.md` + `ds/tokens.json`, stamped with the current package version *and* API hash (per the manifest spec), published with the package (so consuming repos get it via node_modules). Absent or stale is the first finding, and `manifest` mode is its fix.
 - **Agent-facing docs** — `CLAUDE.md`/`AGENTS.md` in the DS repo and a generator digest in the manifest: the ~40 lines a generating agent needs in context (inventory, synonyms, palette policy, deprecations). If generators can't see the rules, the gate is a mop.
 - **Types as the API of record** — the published `.d.ts` is complete and strict; it is the one surface every tool already reads.
 - **Structured component metadata** — stories/docs organized so per-component guidance is mechanically locatable (one component ↔ one doc unit), rather than prose scattered across pages.

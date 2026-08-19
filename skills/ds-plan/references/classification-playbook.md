@@ -38,7 +38,7 @@ Before the ladder, test every element against what the system has explicitly rej
 
 Sources, in order of authority: the manifest's policy zone, a deprecation record naming a replacement, a documented guideline or ADR, a component's own docs saying "do not use this for X." Signals worth screening for: patterns with a named sanctioned alternative (a nested modal where the system mandates a drawer or a route; a custom select where the system mandates the native one; a bespoke tooltip carrying interactive content), deprecated components the design reproduces by name, and anything the palette or motion policy forbids outright.
 
-**Hard Rule 3 governs here.** No quotable source means this is not bucket 1. Classify the element on the ladder and attach the concern as an advisory note — "the system has no policy on this, but it is the third feature to ask for it" is useful; a fabricated prohibition is not.
+**Skill Rule 2 (quote your policy source) governs here.** No quotable source means this is not bucket 1. Classify the element on the ladder and attach the concern as an advisory note — "the system has no policy on this, but it is the third feature to ask for it" is useful; a fabricated prohibition is not.
 
 ### Bucket 1 — Don't build
 
@@ -130,25 +130,7 @@ Read a sample of the call sites — enough to know which variants and props are 
 - **Additive** — a new optional prop or variant whose default preserves every existing rendering. Blast radius is review surface, not regression surface. Most extensions should be this shape; if yours isn't, ask why.
 - **Behavior-changing** — a changed default, an altered rendering for an existing variant, a widened type that makes previously-invalid usage compile. Every consumer is now a test case, and this needs a migration note in the DS changelog.
 
-```
-- **Element**: <name>, <drawn|implied>
-- **Component**: `<X>` — `packages/ds/src/X/X.tsx`
-- **API delta**:
-  ```diff
-    type XProps = {
-      variant: 'default' | 'muted'
-  +   /** Renders the destructive treatment. Default unchanged. */
-  +   tone?: 'neutral' | 'critical'
-    }
-  ```
-- **Delta class**: additive | behavior-changing
-- **Blast radius**: N call sites across M packages (`app/a`, `app/b`); variants in use: …;
-  owners: <from CODEOWNERS>. For behavior-changing: which call sites change rendering.
-- **Generality**: the second use case that justifies it, named concretely
-- **Blocks**: which elements in this map cannot ship until this lands
-- **Effort**: S | M | L, including stories, tests, and docs
-- **Interim**: wait | local adapter | waiver — see the sequencing section
-```
+The map entry carries: **element** (drawn|implied) · **component** with its path · **API delta** as a diff · **delta class** · **blast radius** (counts, packages, owners — never adjectives) · **generality** (the second use case, named concretely) · **blocks** (element ids) · **effort** · **interim** (wait | local adapter | waiver — see Sequencing). The elaborated shape of these fields — and the standalone plan an item becomes when promoted — is [work-item-template.md](work-item-template.md) Shape A; the map entry is its abstract, not a rival spec.
 
 ### Bucket 5 — Net-new
 
@@ -156,28 +138,7 @@ Nothing covers it. The deliverable is a **contract, not an implementation** — 
 
 Run the generality test again to set the owner: `owner: ds` for a generic primitive; `owner: app` for a domain composite that happens to be new. Getting this backwards is expensive in both directions — a domain composite in the DS is permanent maintenance for one consumer, and a generic primitive in the app is the duplicate `/ds-drift` will flag next quarter.
 
-```
-- **Element**: <name>, <drawn|implied>
-- **Owner**: ds | app — with the generality test result in one line
-- **Contract**:
-  ```ts
-  interface ThingProps {
-    /* the minimum API the design requires, no speculative props */
-  }
-  ```
-- **Anatomy**: named slots and their required/optional status
-- **States**: the state matrix from Phase A that applies
-- **Keyboard & a11y contract**: roles, names, focus behavior, what is announced.
-  Non-negotiable — this is the part hand-rolls get wrong and the reason it belongs in the DS.
-- **Tokens**: the semantic tokens it consumes. Any gap here is a token request, not an
-  invented value — route it to `/ds-doctor`.
-- **Prior art**: the closest existing component and why it doesn't stretch. If this section
-  is hard to write, re-check bucket 3.
-- **Open questions**: what the DS owner must decide before build
-- **Blocks**: which elements in this map depend on it
-- **Effort**: S | M | L
-- **Interim**: wait | local adapter | waiver
-```
+The map entry carries: **element** (drawn|implied) · **owner** (ds|app, with the generality test result in one line) · **contract** (the minimum TypeScript interface the design requires) · **anatomy** · **states** (the Phase A matrix that applies) · **keyboard & a11y contract** (non-negotiable — this is the part hand-rolls get wrong and the reason it belongs in the DS) · **tokens** (gaps are token requests routed to `/ds-doctor`, never invented values) · **prior art** (the closest existing component and why it doesn't stretch — if this is hard to write, re-check bucket 3) · **open questions** · **blocks** · **effort** · **interim**. The elaborated RFC shape, when promoted, is [work-item-template.md](work-item-template.md) Shape B.
 
 Speculative props are the trap. Ship the API the design requires; a prop added "while we're in there" is permanent surface area bought with no evidence.
 
@@ -206,20 +167,7 @@ An interim choice with no removal plan is how design systems acquire permanent d
 
 ## Work-item format
 
-Bucket 4 and 5 entries carry the fields above *plus* this block, so they read the same as findings from the sibling skills and can be triaged in the same queue:
-
-```markdown
-### [EXT-NN] / [NEW-NN] Short imperative title
-
-- **Class**: machine key — `ds.extension.variant`, `ds.extension.prop`,
-  `ds.net-new.primitive`, `ds.net-new.composite`, `ds.policy.rejected`
-- **Repo**: ds | app
-- **Blocks**: <element ids in this map, and other features if a `backlog` run found them>
-- **Effort**: S (hours) / M (a day-ish) / L (multi-day), including stories, tests, docs
-- **Confidence**: HIGH (read the types, certain) / MED (needs a DS owner's read) /
-  LOW (the design is ambiguous — say what would resolve it)
-- **Priority**: P1 blocks app work · P2 improves it · P3 opportunistic
-```
+Bucket 4 and 5 entries carry the fields above *plus* a `### [EXT-NN] / [NEW-NN] Short imperative title` block with the family finding fields from [conventions.md](../../ds-drift/references/conventions.md) — **Class** (`ds.extension.variant`, `ds.extension.prop`, `ds.net-new.primitive`, `ds.net-new.composite`, `ds.policy.rejected`), **Repo** (ds | app), **Blocks** (element ids in this map, and other features if a `backlog` run found them), **Effort**, **Confidence**, **Priority** — so they read the same as findings from the sibling skills and can be triaged in the same queue.
 
 Priority here means schedule position, not importance: an item is P1 because something waits on it, which is a fact about the map rather than a judgment about the design system.
 

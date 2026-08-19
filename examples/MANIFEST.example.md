@@ -5,8 +5,10 @@
 # @acme/ui Conformance Manifest
 
 <!-- generated: header -->
+- **Manifest schema**: 2
 - **Package**: @acme/ui@4.2.0
-- **Generated**: 2026-07-23, commit `f7a19d2`, by ds-doctor v0.2.0
+- **API hash**: sha256:9f2c41d8a7e0b3f6c5d21e8a90b4c7f3d6e1a852b90c4d7e3f6a1b852c90d4e7
+- **Generated**: 2026-07-23, commit `f7a19d2`, by ds-doctor v0.4.0
 - **Token source**: packages/ui/src/tokens/*.css → ds/tokens.json (62 tokens, themes: light, dark)
 <!-- /generated -->
 
@@ -43,35 +45,50 @@
   descendant selectors and `!important` against component internals are not.
 - **Contribution path**: DS gaps become issues labeled `ds-request`; interim
   hand-rolls require a waiver below, with an expiry.
+<!-- /hand-maintained -->
 
+<!-- hand-maintained: severity-map -->
 ## Severity map (overrides ds-drift defaults)
 
-| Class | Severity |
-|---|---|
-| token.palette.raw | blocking |
-| usage.wrong-variant | should-fix |
+| Class | Severity | Why |
+|---|---|---|
+| token.palette.raw | blocking | Semantic-only policy above; raw palette was our top drift source (2026-Q1 sweep) |
+| usage.wrong-variant | should-fix | Variant guidance shipped in 4.0 — enforcing softly through 2026 (ADR-012) |
+<!-- /hand-maintained -->
 
+<!-- hand-maintained: waivers -->
 ## Waivers
 
 | Id | Scope (glob) | Class | Rationale | Owner | Expires |
 |---|---|---|---|---|---|
 | W-001 | apps/marketing/** | token.* | Campaign styles intentionally off-system | @igloude | 2026-12-31 |
+<!-- /hand-maintained -->
 
+<!-- hand-maintained: exclusions -->
 ## Exclusions
 
-| Scope (glob) | Reason |
-|---|---|
-| apps/*/emails/** | Inline styles are load-bearing in email clients |
+| Scope (glob) | Reason | Owner | Expires |
+|---|---|---|---|
+| apps/*/emails/** | Inline styles are load-bearing in email clients | @igloude | 2027-06-30 |
+<!-- /hand-maintained -->
 
+<!-- generated: notes-for-generators -->
 ## Notes for generators
 
 Read this section before writing any UI in a consuming repo.
 
-- Use the inventory above; the Synonyms column lists names you might reach
-  for — the component in column one is what exists here.
-- Colors come from semantic tokens only (`var(--color-*)`, see ds/tokens.json).
-  Raw palette classes are forbidden in app code. Never invent a token name.
+- Components: use the inventory above; the Synonyms column lists names you
+  might reach for — the component in column one is what exists here.
 - Active deprecations: `Chip` → `Tag`; `Button appearance` prop → `variant`.
-- If the DS lacks what you need: file a `ds-request` issue. Do not hand-roll
-  a parallel component.
+- Colors come from semantic tokens only (`var(--color-*)`, see ds/tokens.json);
+  the Policy section above governs raw palette use. Never invent a token name.
+- If the DS lacks what you need, follow the contribution path in Policy —
+  do not hand-roll a parallel component.
+<!-- /generated -->
+
+<!-- hand-maintained: house-rules -->
+## House rules
+
+- Forms always compose `<Form>` + `<Form.Field>`; never wire a raw `<form>`.
+- Icon-only buttons always get a `label` prop — the a11y name is not optional.
 <!-- /hand-maintained -->

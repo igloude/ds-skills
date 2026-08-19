@@ -22,8 +22,9 @@ Process what happened since the last session. Read `plans/README.md` (the shared
 - Manifest stamp moved since a map was planned → mark the map STALE in the index and point at `/ds-plan recheck`.
 - Maps whose feature branches merged → mark BUILT; spot-check that gate reviews of those branches recorded any due "Map corrections" rows.
 
-**Waivers**
+**Waivers and exclusions**
 - Expired waivers, waivers with no owner, and waivers whose matched locations no longer exist are each a finding for the next review or sweep. A waiver ledger nobody audits becomes a hole in the gate.
+- The same pass runs over the exclusions table: expired exclusions (their paths are auditable again — say so), exclusions with no owner, and exclusions whose globs match nothing anymore. Exclusions need this audit even more than waivers do: excluded paths are never scanned, so by construction nobody else will ever notice a stale one.
 
 **Recurrence**
 - Recompute class counts from the review log. Any class at 3+ reviews without a lint-rule plan gets one proposed now — this is the skill automating itself out of a violation class, and it is the highest-leverage output reconcile produces.
